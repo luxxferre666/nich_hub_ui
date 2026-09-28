@@ -12600,13 +12600,43 @@ local B0 = {
     [46] = ApiImpl,
     [47] = { ChilliLibrary, WindowMethods, TabMethods, SectionMethods, OptionMethods, StateMethods, ExclusiveGroupMethods, SurfaceMethods },
 }
-local S0 = game:HttpGet(U0)
-local F0, E0 = loadstring(S0)
-assert(F0, E0)
-local O0, I0 = pcall(F0)
-assert(O0 and type(I0) == "function", tostring(I0))
-local O1, R1 = pcall(I0, B0, C0)
-assert(O1 and R1 == 0x51C71AA, tostring(R1))
+local CHILLI_ENGINE_ENABLED = true
+local function clLog(msg) print("[ChilliLib] " .. msg) end
+
+if not CHILLI_ENGINE_ENABLED then
+    clLog("engine DIMATIKAN (CHILLI_ENGINE_ENABLED=false), UI tetap dibangun lokal")
+    return
+end
+
+local okFetch, S0 = pcall(function() return game:HttpGet(U0) end)
+if not okFetch or type(S0) ~= "string" or #S0 == 0 then
+    clLog("engine GAGAL fetch: " .. tostring(S0))
+    return
+end
+clLog("engine source " .. #S0 .. " byte, sedang compile...")
+
+local okLoad, F0 = pcall(loadstring, S0)
+if not okLoad or type(F0) ~= "function" then
+    clLog("engine GAGAL loadstring: " .. tostring(F0))
+    return
+end
+clLog("engine compile OK, memanggil chunk...")
+
+local okChunk, I0 = pcall(F0)
+if not okChunk or type(I0) ~= "function" then
+    clLog("engine GAGAL ambil fungsi: " .. tostring(I0))
+    return
+end
+clLog("engine chunk OK, memanggil dengan bridge B0 (" .. tostring(C0) .. " sebagai argumen 2)...")
+
+local okRun, R1 = pcall(I0, B0, C0)
+if not okRun then
+    clLog("engine GAGAL dijalankan: " .. tostring(R1))
+elseif R1 ~= 0x51C71AA then
+    clLog("engine SELESAI tapi return " .. tostring(R1) .. " (harusnya " .. 0x51C71AA .. ")")
+else
+    clLog("engine OK, signature cocok " .. 0x51C71AA)
+end
 end)()
 chilliThemePass({ objects.obj1, launcherGui })
 
