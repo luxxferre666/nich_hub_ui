@@ -488,7 +488,7 @@ pcall(chilliSetProperty, objects.obj9, "SizeConstraint", Enum.SizeConstraint.Rel
 pcall(chilliSetProperty, objects.obj9, "ZIndex", 6)
 pcall(chilliSetProperty, objects.obj9, "AutomaticSize", Enum.AutomaticSize.None)
 pcall(chilliSetProperty, objects.obj9, "LayoutOrder", 0)
-pcall(chilliSetProperty, objects.obj9, "Text", "NiCH HUB")
+pcall(chilliSetProperty, objects.obj9, "Text", "Chilli Hub")
 pcall(chilliSetProperty, objects.obj9, "TextColor3", chilliColor(255,255,255))
 pcall(chilliSetProperty, objects.obj9, "TextTransparency", 0)
 pcall(chilliSetProperty, objects.obj9, "TextStrokeColor3", chilliColor(0,0,0))
@@ -1215,7 +1215,7 @@ chilliText.FontFace = sourceShopText and sourceShopText.FontFace or Font.new(
     "rbxasset://fonts/families/GothamSSm.json",
     Enum.FontWeight.ExtraBold
 )
-chilliText.Text = "NiCH HUB"
+chilliText.Text = "Chilli Hub"
 chilliText.TextColor3 = sourceShopText and sourceShopText.TextColor3 or chilliColor(255, 255, 255)
 chilliText.TextTransparency = sourceShopText and sourceShopText.TextTransparency or 0
 chilliText.TextScaled = sourceShopText == nil or sourceShopText.TextScaled
@@ -12538,8 +12538,8 @@ end
 ApiImpl[106] = function(self, config)
     assert(not self.Window, "ChilliLibrary chi quan ly 1 Window cho UI nay")
     local windowConfig = normalizeConfig(config or {
-        Name = "NiCH HUB",
-    }, "NiCH HUB")
+        Name = "Chilli Hub",
+    }, "Chilli Hub")
     local window = setmetatable({
         _kind = "Window",
         _destroyed = false,
