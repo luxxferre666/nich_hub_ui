@@ -12601,41 +12601,101 @@ local B0 = {
     [47] = { ChilliLibrary, WindowMethods, TabMethods, SectionMethods, OptionMethods, StateMethods, ExclusiveGroupMethods, SurfaceMethods },
 }
 local CHILLI_ENGINE_ENABLED = true
-local function clLog(msg) print("[ChilliLib] " .. msg) end
+local function clSay(msg) print("[ChilliLib] " .. msg) end
+local function clKey(v) return tostring(v) end
+
+local function snapshot()
+    local lines = {}
+    local function walk(inst, path, depth)
+        if depth > 6 then return end
+        local rec = path .. "|" .. inst.ClassName .. "|" .. inst.Name
+        pcall(function()
+            if inst:IsA("GuiObject") then
+                rec = rec .. "|bg=" .. clKey(inst.BackgroundColor3) .. "|vis=" .. clKey(inst.Visible)
+                if inst:IsA("TextLabel") or inst:IsA("TextButton") or inst:IsA("TextBox") then
+                    rec = rec .. "|txt=" .. clKey(inst.Text) .. "|f=" .. clKey(inst.Font) .. "|sz=" .. clKey(inst.TextSize)
+                end
+            end
+        end)
+        lines[#lines + 1] = rec
+        for _, c in ipairs(inst:GetChildren()) do
+            walk(c, path .. "/" .. inst.Name, depth + 1)
+        end
+    end
+    if objects and objects.obj1 then walk(objects.obj1, "OBJ1", 0) end
+    if launcherGui then walk(launcherGui, "LCR", 0) end
+    return lines
+end
+
+local function rootAttrs()
+    local t = {}
+    if launcherGui then
+        t[#t + 1] = "QHH=" .. clKey(launcherGui:GetAttribute("QuickHudHidden"))
+        t[#t + 1] = "Own=" .. clKey(launcherGui:GetAttribute(OWNER_ATTRIBUTE))
+    end
+    if objects and objects.obj1 then
+        t[#t + 1] = "RootOwn=" .. clKey(objects.obj1:GetAttribute(OWNER_ATTRIBUTE))
+    end
+    return table.concat(t, " ")
+end
 
 if not CHILLI_ENGINE_ENABLED then
-    clLog("engine DIMATIKAN (CHILLI_ENGINE_ENABLED=false), UI tetap dibangun lokal")
+    clSay("engine DIMATIKAN -> UI lokal saja")
     return
 end
 
 local okFetch, S0 = pcall(function() return game:HttpGet(U0) end)
 if not okFetch or type(S0) ~= "string" or #S0 == 0 then
-    clLog("engine GAGAL fetch: " .. tostring(S0))
+    clSay("GAGAL fetch: " .. clKey(S0))
     return
 end
-clLog("engine source " .. #S0 .. " byte, sedang compile...")
 
 local okLoad, F0 = pcall(loadstring, S0)
 if not okLoad or type(F0) ~= "function" then
-    clLog("engine GAGAL loadstring: " .. tostring(F0))
+    clSay("GAGAL compile: " .. clKey(F0))
     return
 end
-clLog("engine compile OK, memanggil chunk...")
 
 local okChunk, I0 = pcall(F0)
 if not okChunk or type(I0) ~= "function" then
-    clLog("engine GAGAL ambil fungsi: " .. tostring(I0))
+    clSay("GAGAL ambil fungsi: " .. clKey(I0))
     return
 end
-clLog("engine chunk OK, memanggil dengan bridge B0 (" .. tostring(C0) .. " sebagai argumen 2)...")
 
+local before, beforeAttrs = snapshot(), rootAttrs()
 local okRun, R1 = pcall(I0, B0, C0)
+local after, afterAttrs = snapshot(), rootAttrs()
+
+local setB, added = {}, {}
+for _, l in ipairs(before) do setB[l] = true end
+for _, l in ipairs(after) do if not setB[l] then added[#added + 1] = l end end
+local setA, removed = {}, {}
+for _, l in ipairs(after) do setA[l] = true end
+for _, l in ipairs(before) do if not setA[l] then removed[#removed + 1] = l end end
+
+local verdict = "VERDICT " .. (#added + #removed) .. " ubah | node " .. #before .. "->" .. #after
+    .. " | ret=" .. clKey(R1) .. (R1 == 0x51C71AA and " (OK)" or " (<>0x51C71AA)")
 if not okRun then
-    clLog("engine GAGAL dijalankan: " .. tostring(R1))
-elseif R1 ~= 0x51C71AA then
-    clLog("engine SELESAI tapi return " .. tostring(R1) .. " (harusnya " .. 0x51C71AA .. ")")
-else
-    clLog("engine OK, signature cocok " .. 0x51C71AA)
+    verdict = verdict .. " | ERROR: " .. clKey(R1)
+end
+clSay(verdict)
+
+clSay("ATRIB " .. (beforeAttrs == afterAttrs and "tidak berubah" or "BERUBAH"))
+if beforeAttrs ~= afterAttrs then
+    clSay("  sbl: " .. beforeAttrs)
+    clSay("  sdh: " .. afterAttrs)
+end
+
+local shown = 0
+for _, l in ipairs(added) do
+    shown += 1
+    if shown > 6 then break end
+    clSay("  + " .. l)
+end
+for _, l in ipairs(removed) do
+    shown += 1
+    if shown > 6 then break end
+    clSay("  - " .. l)
 end
 end)()
 chilliThemePass({ objects.obj1, launcherGui })
