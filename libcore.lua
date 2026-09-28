@@ -9,9 +9,9 @@ local camera = workspace.CurrentCamera
 assert(player, "ChilliLibrary chi co the chay mot lan o phia client")
 local playerGui = player:WaitForChild("PlayerGui")
 
-local ROOT_GUI_NAME = "NiCH Hub"
-local LAUNCHER_GUI_NAME = "NiCH Hub Launcher"
-local OWNER_ATTRIBUTE = "NiCHHubOwned"
+local ROOT_GUI_NAME = "Settings"
+local LAUNCHER_GUI_NAME = "ChilliLeftCenter"
+local OWNER_ATTRIBUTE = "ChilliLibraryOwned"
 local parent = CoreGui
 local parentName = "CoreGui"
 do
@@ -160,162 +160,6 @@ cleanupOldUiScreens()
 
 
 
-
--- ===== CHILLI THEME: ungu (retouch) =====
-local CHILLI_PALETTE = {
-	["0,0,0"]       = Color3.fromRGB(18, 14, 34),
-	["255,255,255"] = Color3.fromRGB(243, 238, 255),
-	["253,86,89"]   = Color3.fromRGB(196, 132, 252),
-	["255,11,15"]   = Color3.fromRGB(147, 51, 234),
-	["111,0,2"]     = Color3.fromRGB(124, 58, 237),
-	["126,0,0"]     = Color3.fromRGB(91, 33, 182),
-	["175,0,0"]     = Color3.fromRGB(109, 40, 217),
-	["76,0,0"]      = Color3.fromRGB(76, 29, 149),
-	["58,0,0"]      = Color3.fromRGB(88, 28, 135),
-	["239,28,28"]   = Color3.fromRGB(192, 132, 252),
-	["255,54,54"]   = Color3.fromRGB(216, 180, 254),
-	["255,130,130"] = Color3.fromRGB(221, 214, 254),
-	["255,132,123"] = Color3.fromRGB(221, 214, 254),
-	["255,193,194"] = Color3.fromRGB(237, 233, 254),
-	["58,255,55"]   = Color3.fromRGB(168, 85, 247),
-	["20,109,0"]    = Color3.fromRGB(88, 28, 135),
-	["198,198,198"] = Color3.fromRGB(203, 195, 226),
-	["89,89,89"]    = Color3.fromRGB(124, 112, 160),
-	["235,235,235"] = Color3.fromRGB(232, 227, 247),
-	["236,236,236"] = Color3.fromRGB(232, 227, 247),
-	["221,221,221"] = Color3.fromRGB(214, 207, 238),
-	["39,39,39"]    = Color3.fromRGB(34, 27, 56),
-	["170,174,184"] = Color3.fromRGB(176, 166, 208),
-	["170,170,180"] = Color3.fromRGB(176, 166, 208),
-	["40,40,55"]    = Color3.fromRGB(37, 29, 58),
-	["27,42,53"]    = Color3.fromRGB(31, 24, 51),
-	["52,72,84"]    = Color3.fromRGB(45, 35, 71),
-	["34,45,52"]    = Color3.fromRGB(33, 26, 54),
-	["0,36,84"]     = Color3.fromRGB(49, 38, 78),
-	["0,31,54"]     = Color3.fromRGB(44, 34, 71),
-	["90,90,110"]   = Color3.fromRGB(97, 84, 140),
-	["111,145,161"] = Color3.fromRGB(150, 120, 220),
-	["239,220,203"] = Color3.fromRGB(226, 216, 245),
-}
-
-local function chilliColor(r, g, b)
-	local ri, gi, bi = math.floor(r + 0.5), math.floor(g + 0.5), math.floor(b + 0.5)
-	local mapped = CHILLI_PALETTE[ri .. "," .. gi .. "," .. bi]
-	if mapped then
-		return mapped
-	end
-	local rf, gf, bf = r / 255, g / 255, b / 255
-	local maxc, minc = math.max(rf, gf, bf), math.min(rf, gf, bf)
-	local l = (maxc + minc) / 2
-	local d = maxc - minc
-	local s = 0
-	if d > 0 then
-		if l > 0.5 then
-			s = (maxc - l) / math.max(1e-6, 1 - l)
-		else
-			s = (l - minc) / math.max(1e-6, l)
-		end
-	end
-	if d <= 0.02 then
-		s = 0.2
-	end
-	local h = 0.745
-	local c = (1 - math.abs(2 * l - 1)) * s
-	local x = c * (1 - math.abs((h * 6) % 2 - 1))
-	local m = l - c / 2
-	local r1, g1, b1
-	if h < 1 / 6 then
-		r1, g1, b1 = c, x, 0
-	elseif h < 2 / 6 then
-		r1, g1, b1 = x, c, 0
-	elseif h < 3 / 6 then
-		r1, g1, b1 = 0, c, x
-	elseif h < 4 / 6 then
-		r1, g1, b1 = 0, x, c
-	elseif h < 5 / 6 then
-		r1, g1, b1 = x, 0, c
-	else
-		r1, g1, b1 = c, 0, x
-	end
-	return Color3.new(r1 + m, g1 + m, b1 + m)
-end
-
-local CHILLI_ROUNDABLE = {
-	Frame = true,
-	TextButton = true,
-	TextLabel = true,
-	ImageLabel = true,
-	ScrollingFrame = true,
-	TextBox = true,
-}
-
-local function chilliNew(className)
-	local instance = Instance.new(className)
-	if CHILLI_ROUNDABLE[className] then
-		local corner = Instance.new("UICorner")
-		corner.Name = "ChilliCorner"
-		corner.CornerRadius = UDim.new(0, 6)
-		corner.Parent = instance
-	end
-	return instance
-end
-
-local function chilliThemePass(rootList)
-	local roots = {}
-	for _, item in ipairs(rootList) do
-		if item then
-			roots[#roots + 1] = item
-		end
-	end
-	local stack = roots
-	local strokeColor = Color3.fromRGB(88, 60, 160)
-	while #stack > 0 do
-		local node = table.remove(stack)
-		local class = node.ClassName
-		if class == "UIStroke" then
-			node.Color = strokeColor
-		elseif CHILLI_ROUNDABLE[class] then
-			local keep = nil
-			local drop = {}
-			for _, child in ipairs(node:GetChildren()) do
-				if child:IsA("UICorner") then
-					if child.Name == "ChilliCorner" and keep == nil then
-						keep = child
-					elseif child.Name == "ChilliCorner" then
-						drop[#drop + 1] = child
-					elseif keep == nil then
-						keep = child
-					else
-						drop[#drop + 1] = child
-					end
-				end
-			end
-			for _, corner in ipairs(drop) do
-				corner:Destroy()
-			end
-			local okSize, size = pcall(function()
-				return node.AbsoluteSize
-			end)
-			local radius = 0
-			if okSize and size.X >= 3 and size.Y >= 3 then
-				radius = math.floor(math.min(20, math.max(3, math.min(size.X, size.Y) * 0.28)))
-				if size.Y < 12 then
-					radius = math.min(radius, math.floor(size.Y / 2))
-				end
-			end
-			if keep == nil then
-				keep = Instance.new("UICorner")
-				keep.Name = "ChilliCorner"
-				keep.Parent = node
-			end
-			keep.CornerRadius = UDim.new(0, radius)
-		end
-		for _, child in ipairs(node:GetChildren()) do
-			stack[#stack + 1] = child
-		end
-	end
-end
-
 local function chilliSetProperty(instance, key, value)
     instance[key] = value
 end
@@ -328,15 +172,15 @@ objects.obj1:SetAttribute("MenuSize", UDim2.new(0.44999998807907104,0,0.55000001
 objects.obj1:SetAttribute(OWNER_ATTRIBUTE, true)
 objects.obj1.Parent = parent
 
-objects.obj2 = chilliNew("Frame")
+objects.obj2 = Instance.new("Frame")
 pcall(chilliSetProperty, objects.obj2, "Name", "Frame")
 pcall(chilliSetProperty, objects.obj2, "Archivable", true)
 pcall(chilliSetProperty, objects.obj2, "Visible", true)
 pcall(chilliSetProperty, objects.obj2, "Active", false)
 pcall(chilliSetProperty, objects.obj2, "AnchorPoint", Vector2.new(0.5,0.5))
-pcall(chilliSetProperty, objects.obj2, "BackgroundColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj2, "BackgroundColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj2, "BackgroundTransparency", 0.4000000059604645)
-pcall(chilliSetProperty, objects.obj2, "BorderColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj2, "BorderColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj2, "BorderSizePixel", 0)
 pcall(chilliSetProperty, objects.obj2, "ClipsDescendants", false)
 pcall(chilliSetProperty, objects.obj2, "Position", UDim2.new(0.5,0,0.4749999940395355,0))
@@ -354,22 +198,22 @@ objects.obj3 = Instance.new("UIStroke")
 pcall(chilliSetProperty, objects.obj3, "Name", "UIStroke")
 pcall(chilliSetProperty, objects.obj3, "Archivable", true)
 pcall(chilliSetProperty, objects.obj3, "ApplyStrokeMode", Enum.ApplyStrokeMode.Border)
-pcall(chilliSetProperty, objects.obj3, "Color", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj3, "Color", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj3, "Enabled", true)
 pcall(chilliSetProperty, objects.obj3, "LineJoinMode", Enum.LineJoinMode.Round)
 pcall(chilliSetProperty, objects.obj3, "Thickness", 0.00800000037997961)
 pcall(chilliSetProperty, objects.obj3, "Transparency", 0)
 objects.obj3.Parent = objects.obj2
 
-objects.obj4 = chilliNew("Frame")
+objects.obj4 = Instance.new("Frame")
 pcall(chilliSetProperty, objects.obj4, "Name", "Top")
 pcall(chilliSetProperty, objects.obj4, "Archivable", true)
 pcall(chilliSetProperty, objects.obj4, "Visible", true)
 pcall(chilliSetProperty, objects.obj4, "Active", false)
 pcall(chilliSetProperty, objects.obj4, "AnchorPoint", Vector2.new(0.5,0))
-pcall(chilliSetProperty, objects.obj4, "BackgroundColor3", chilliColor(111,0,2))
+pcall(chilliSetProperty, objects.obj4, "BackgroundColor3", Color3.fromRGB(111,0,2))
 pcall(chilliSetProperty, objects.obj4, "BackgroundTransparency", 0)
-pcall(chilliSetProperty, objects.obj4, "BorderColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj4, "BorderColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj4, "BorderSizePixel", 0)
 pcall(chilliSetProperty, objects.obj4, "ClipsDescendants", false)
 pcall(chilliSetProperty, objects.obj4, "Position", UDim2.new(0.5,0,0,0))
@@ -387,22 +231,22 @@ objects.obj5 = Instance.new("UIStroke")
 pcall(chilliSetProperty, objects.obj5, "Name", "UIStroke")
 pcall(chilliSetProperty, objects.obj5, "Archivable", true)
 pcall(chilliSetProperty, objects.obj5, "ApplyStrokeMode", Enum.ApplyStrokeMode.Border)
-pcall(chilliSetProperty, objects.obj5, "Color", chilliColor(58,0,0))
+pcall(chilliSetProperty, objects.obj5, "Color", Color3.fromRGB(58,0,0))
 pcall(chilliSetProperty, objects.obj5, "Enabled", true)
 pcall(chilliSetProperty, objects.obj5, "LineJoinMode", Enum.LineJoinMode.Round)
 pcall(chilliSetProperty, objects.obj5, "Thickness", 0.05999999865889549)
 pcall(chilliSetProperty, objects.obj5, "Transparency", 0)
 objects.obj5.Parent = objects.obj4
 
-objects.obj6 = chilliNew("Frame")
+objects.obj6 = Instance.new("Frame")
 pcall(chilliSetProperty, objects.obj6, "Name", "Color")
 pcall(chilliSetProperty, objects.obj6, "Archivable", true)
 pcall(chilliSetProperty, objects.obj6, "Visible", true)
 pcall(chilliSetProperty, objects.obj6, "Active", false)
 pcall(chilliSetProperty, objects.obj6, "AnchorPoint", Vector2.new(0.5,0))
-pcall(chilliSetProperty, objects.obj6, "BackgroundColor3", chilliColor(255,255,255))
+pcall(chilliSetProperty, objects.obj6, "BackgroundColor3", Color3.fromRGB(255,255,255))
 pcall(chilliSetProperty, objects.obj6, "BackgroundTransparency", 0)
-pcall(chilliSetProperty, objects.obj6, "BorderColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj6, "BorderColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj6, "BorderSizePixel", 0)
 pcall(chilliSetProperty, objects.obj6, "ClipsDescendants", false)
 pcall(chilliSetProperty, objects.obj6, "Position", UDim2.new(0.5,0,0,0))
@@ -416,15 +260,15 @@ pcall(chilliSetProperty, objects.obj6, "AutomaticSize", Enum.AutomaticSize.None)
 pcall(chilliSetProperty, objects.obj6, "LayoutOrder", 0)
 objects.obj6.Parent = objects.obj4
 
-objects.obj7 = chilliNew("Frame")
+objects.obj7 = Instance.new("Frame")
 pcall(chilliSetProperty, objects.obj7, "Name", "Transparent")
 pcall(chilliSetProperty, objects.obj7, "Archivable", true)
 pcall(chilliSetProperty, objects.obj7, "Visible", true)
 pcall(chilliSetProperty, objects.obj7, "Active", false)
 pcall(chilliSetProperty, objects.obj7, "AnchorPoint", Vector2.new(0.5,0.5))
-pcall(chilliSetProperty, objects.obj7, "BackgroundColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj7, "BackgroundColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj7, "BackgroundTransparency", 0.8999999761581421)
-pcall(chilliSetProperty, objects.obj7, "BorderColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj7, "BorderColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj7, "BorderSizePixel", 0)
 pcall(chilliSetProperty, objects.obj7, "ClipsDescendants", false)
 pcall(chilliSetProperty, objects.obj7, "Position", UDim2.new(0.5,0,0.5,0))
@@ -438,15 +282,15 @@ pcall(chilliSetProperty, objects.obj7, "AutomaticSize", Enum.AutomaticSize.None)
 pcall(chilliSetProperty, objects.obj7, "LayoutOrder", 0)
 objects.obj7.Parent = objects.obj6
 
-objects.obj8 = chilliNew("ImageLabel")
+objects.obj8 = Instance.new("ImageLabel")
 pcall(chilliSetProperty, objects.obj8, "Name", "Pattern")
 pcall(chilliSetProperty, objects.obj8, "Archivable", true)
 pcall(chilliSetProperty, objects.obj8, "Visible", true)
 pcall(chilliSetProperty, objects.obj8, "Active", false)
 pcall(chilliSetProperty, objects.obj8, "AnchorPoint", Vector2.new(0.5,0.5))
-pcall(chilliSetProperty, objects.obj8, "BackgroundColor3", chilliColor(255,255,255))
+pcall(chilliSetProperty, objects.obj8, "BackgroundColor3", Color3.fromRGB(255,255,255))
 pcall(chilliSetProperty, objects.obj8, "BackgroundTransparency", 1)
-pcall(chilliSetProperty, objects.obj8, "BorderColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj8, "BorderColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj8, "BorderSizePixel", 0)
 pcall(chilliSetProperty, objects.obj8, "ClipsDescendants", false)
 pcall(chilliSetProperty, objects.obj8, "Position", UDim2.new(0.5,0,0.5,0))
@@ -459,7 +303,7 @@ pcall(chilliSetProperty, objects.obj8, "ZIndex", 1)
 pcall(chilliSetProperty, objects.obj8, "AutomaticSize", Enum.AutomaticSize.None)
 pcall(chilliSetProperty, objects.obj8, "LayoutOrder", 0)
 pcall(chilliSetProperty, objects.obj8, "Image", "")
-pcall(chilliSetProperty, objects.obj8, "ImageColor3", chilliColor(255,255,255))
+pcall(chilliSetProperty, objects.obj8, "ImageColor3", Color3.fromRGB(255,255,255))
 pcall(chilliSetProperty, objects.obj8, "ImageTransparency", 0.5)
 pcall(chilliSetProperty, objects.obj8, "ScaleType", Enum.ScaleType.Tile)
 pcall(chilliSetProperty, objects.obj8, "SliceCenter", Rect.new(0,0,0,0))
@@ -468,15 +312,15 @@ pcall(chilliSetProperty, objects.obj8, "TileSize", UDim2.new(0.15000000596046448
 pcall(chilliSetProperty, objects.obj8, "ResampleMode", Enum.ResamplerMode.Default)
 objects.obj8.Parent = objects.obj7
 
-objects.obj9 = chilliNew("TextLabel")
+objects.obj9 = Instance.new("TextLabel")
 pcall(chilliSetProperty, objects.obj9, "Name", "Label")
 pcall(chilliSetProperty, objects.obj9, "Archivable", true)
 pcall(chilliSetProperty, objects.obj9, "Visible", true)
 pcall(chilliSetProperty, objects.obj9, "Active", false)
 pcall(chilliSetProperty, objects.obj9, "AnchorPoint", Vector2.new(0.5,0.5))
-pcall(chilliSetProperty, objects.obj9, "BackgroundColor3", chilliColor(239,220,203))
+pcall(chilliSetProperty, objects.obj9, "BackgroundColor3", Color3.fromRGB(239,220,203))
 pcall(chilliSetProperty, objects.obj9, "BackgroundTransparency", 1)
-pcall(chilliSetProperty, objects.obj9, "BorderColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj9, "BorderColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj9, "BorderSizePixel", 0)
 pcall(chilliSetProperty, objects.obj9, "ClipsDescendants", false)
 pcall(chilliSetProperty, objects.obj9, "Position", UDim2.new(0.5687711238861084,0,0.5,0))
@@ -488,10 +332,10 @@ pcall(chilliSetProperty, objects.obj9, "SizeConstraint", Enum.SizeConstraint.Rel
 pcall(chilliSetProperty, objects.obj9, "ZIndex", 6)
 pcall(chilliSetProperty, objects.obj9, "AutomaticSize", Enum.AutomaticSize.None)
 pcall(chilliSetProperty, objects.obj9, "LayoutOrder", 0)
-pcall(chilliSetProperty, objects.obj9, "Text", "NiCH HUB")
-pcall(chilliSetProperty, objects.obj9, "TextColor3", chilliColor(255,255,255))
+pcall(chilliSetProperty, objects.obj9, "Text", "Chilli Hub")
+pcall(chilliSetProperty, objects.obj9, "TextColor3", Color3.fromRGB(255,255,255))
 pcall(chilliSetProperty, objects.obj9, "TextTransparency", 0)
-pcall(chilliSetProperty, objects.obj9, "TextStrokeColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj9, "TextStrokeColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj9, "TextStrokeTransparency", 1)
 pcall(chilliSetProperty, objects.obj9, "TextSize", 14)
 pcall(chilliSetProperty, objects.obj9, "TextScaled", true)
@@ -508,7 +352,7 @@ objects.obj10 = Instance.new("UIStroke")
 pcall(chilliSetProperty, objects.obj10, "Name", "UIStroke")
 pcall(chilliSetProperty, objects.obj10, "Archivable", true)
 pcall(chilliSetProperty, objects.obj10, "ApplyStrokeMode", Enum.ApplyStrokeMode.Contextual)
-pcall(chilliSetProperty, objects.obj10, "Color", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj10, "Color", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj10, "Enabled", true)
 pcall(chilliSetProperty, objects.obj10, "LineJoinMode", Enum.LineJoinMode.Round)
 pcall(chilliSetProperty, objects.obj10, "Thickness", 0.07999999821186066)
@@ -518,22 +362,22 @@ objects.obj10.Parent = objects.obj9
 objects.obj11 = Instance.new("UIGradient")
 pcall(chilliSetProperty, objects.obj11, "Name", "UIGradient")
 pcall(chilliSetProperty, objects.obj11, "Archivable", true)
-pcall(chilliSetProperty, objects.obj11, "Color", ColorSequence.new({ColorSequenceKeypoint.new(0,chilliColor(253,86,89)),ColorSequenceKeypoint.new(1,chilliColor(255,11,15))}))
+pcall(chilliSetProperty, objects.obj11, "Color", ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(253,86,89)),ColorSequenceKeypoint.new(1,Color3.fromRGB(255,11,15))}))
 pcall(chilliSetProperty, objects.obj11, "Enabled", true)
 pcall(chilliSetProperty, objects.obj11, "Offset", Vector2.new(0,0))
 pcall(chilliSetProperty, objects.obj11, "Rotation", 90)
 pcall(chilliSetProperty, objects.obj11, "Transparency", NumberSequence.new({NumberSequenceKeypoint.new(0,0,0),NumberSequenceKeypoint.new(1,0,0)}))
 objects.obj11.Parent = objects.obj6
 
-objects.obj12 = chilliNew("ImageLabel")
+objects.obj12 = Instance.new("ImageLabel")
 pcall(chilliSetProperty, objects.obj12, "Name", "Icon")
 pcall(chilliSetProperty, objects.obj12, "Archivable", true)
 pcall(chilliSetProperty, objects.obj12, "Visible", true)
 pcall(chilliSetProperty, objects.obj12, "Active", false)
 pcall(chilliSetProperty, objects.obj12, "AnchorPoint", Vector2.new(0.5,0.5))
-pcall(chilliSetProperty, objects.obj12, "BackgroundColor3", chilliColor(255,255,255))
+pcall(chilliSetProperty, objects.obj12, "BackgroundColor3", Color3.fromRGB(255,255,255))
 pcall(chilliSetProperty, objects.obj12, "BackgroundTransparency", 1)
-pcall(chilliSetProperty, objects.obj12, "BorderColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj12, "BorderColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj12, "BorderSizePixel", 0)
 pcall(chilliSetProperty, objects.obj12, "ClipsDescendants", false)
 pcall(chilliSetProperty, objects.obj12, "Position", UDim2.new(0.06700000166893005,0,0.44999998807907104,0))
@@ -546,7 +390,7 @@ pcall(chilliSetProperty, objects.obj12, "ZIndex", 4)
 pcall(chilliSetProperty, objects.obj12, "AutomaticSize", Enum.AutomaticSize.None)
 pcall(chilliSetProperty, objects.obj12, "LayoutOrder", 0)
 pcall(chilliSetProperty, objects.obj12, "Image", "")
-pcall(chilliSetProperty, objects.obj12, "ImageColor3", chilliColor(255,255,255))
+pcall(chilliSetProperty, objects.obj12, "ImageColor3", Color3.fromRGB(255,255,255))
 pcall(chilliSetProperty, objects.obj12, "ImageTransparency", 0)
 pcall(chilliSetProperty, objects.obj12, "ScaleType", Enum.ScaleType.Fit)
 pcall(chilliSetProperty, objects.obj12, "SliceCenter", Rect.new(0,0,0,0))
@@ -563,15 +407,15 @@ pcall(chilliSetProperty, objects.obj13, "AspectType", Enum.AspectType.FitWithinM
 pcall(chilliSetProperty, objects.obj13, "DominantAxis", Enum.DominantAxis.Width)
 objects.obj13.Parent = objects.obj12
 
-objects.obj14 = chilliNew("TextButton")
+objects.obj14 = Instance.new("TextButton")
 pcall(chilliSetProperty, objects.obj14, "Name", "Close")
 pcall(chilliSetProperty, objects.obj14, "Archivable", true)
 pcall(chilliSetProperty, objects.obj14, "Visible", true)
 pcall(chilliSetProperty, objects.obj14, "Active", true)
 pcall(chilliSetProperty, objects.obj14, "AnchorPoint", Vector2.new(0.5,0.5))
-pcall(chilliSetProperty, objects.obj14, "BackgroundColor3", chilliColor(255,255,255))
+pcall(chilliSetProperty, objects.obj14, "BackgroundColor3", Color3.fromRGB(255,255,255))
 pcall(chilliSetProperty, objects.obj14, "BackgroundTransparency", 1)
-pcall(chilliSetProperty, objects.obj14, "BorderColor3", chilliColor(27,42,53))
+pcall(chilliSetProperty, objects.obj14, "BorderColor3", Color3.fromRGB(27,42,53))
 pcall(chilliSetProperty, objects.obj14, "BorderSizePixel", 1)
 pcall(chilliSetProperty, objects.obj14, "ClipsDescendants", false)
 pcall(chilliSetProperty, objects.obj14, "Position", UDim2.new(0.9549999833106995,0,0.4339999854564667,0))
@@ -584,9 +428,9 @@ pcall(chilliSetProperty, objects.obj14, "ZIndex", 99)
 pcall(chilliSetProperty, objects.obj14, "AutomaticSize", Enum.AutomaticSize.None)
 pcall(chilliSetProperty, objects.obj14, "LayoutOrder", 1)
 pcall(chilliSetProperty, objects.obj14, "Text", "")
-pcall(chilliSetProperty, objects.obj14, "TextColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj14, "TextColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj14, "TextTransparency", 0)
-pcall(chilliSetProperty, objects.obj14, "TextStrokeColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj14, "TextStrokeColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj14, "TextStrokeTransparency", 1)
 pcall(chilliSetProperty, objects.obj14, "TextSize", 14)
 pcall(chilliSetProperty, objects.obj14, "TextScaled", false)
@@ -608,15 +452,15 @@ pcall(chilliSetProperty, objects.obj15, "AspectType", Enum.AspectType.FitWithinM
 pcall(chilliSetProperty, objects.obj15, "DominantAxis", Enum.DominantAxis.Width)
 objects.obj15.Parent = objects.obj14
 
-objects.obj16 = chilliNew("Frame")
+objects.obj16 = Instance.new("Frame")
 pcall(chilliSetProperty, objects.obj16, "Name", "Main")
 pcall(chilliSetProperty, objects.obj16, "Archivable", true)
 pcall(chilliSetProperty, objects.obj16, "Visible", true)
 pcall(chilliSetProperty, objects.obj16, "Active", false)
 pcall(chilliSetProperty, objects.obj16, "AnchorPoint", Vector2.new(0.5,0.5))
-pcall(chilliSetProperty, objects.obj16, "BackgroundColor3", chilliColor(126,0,0))
+pcall(chilliSetProperty, objects.obj16, "BackgroundColor3", Color3.fromRGB(126,0,0))
 pcall(chilliSetProperty, objects.obj16, "BackgroundTransparency", 0)
-pcall(chilliSetProperty, objects.obj16, "BorderColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj16, "BorderColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj16, "BorderSizePixel", 0)
 pcall(chilliSetProperty, objects.obj16, "ClipsDescendants", false)
 pcall(chilliSetProperty, objects.obj16, "Position", UDim2.new(0.5,0,0.5,0))
@@ -630,15 +474,15 @@ pcall(chilliSetProperty, objects.obj16, "AutomaticSize", Enum.AutomaticSize.None
 pcall(chilliSetProperty, objects.obj16, "LayoutOrder", 0)
 objects.obj16.Parent = objects.obj14
 
-objects.obj17 = chilliNew("Frame")
+objects.obj17 = Instance.new("Frame")
 pcall(chilliSetProperty, objects.obj17, "Name", "Color")
 pcall(chilliSetProperty, objects.obj17, "Archivable", true)
 pcall(chilliSetProperty, objects.obj17, "Visible", true)
 pcall(chilliSetProperty, objects.obj17, "Active", false)
 pcall(chilliSetProperty, objects.obj17, "AnchorPoint", Vector2.new(0.5,0))
-pcall(chilliSetProperty, objects.obj17, "BackgroundColor3", chilliColor(255,255,255))
+pcall(chilliSetProperty, objects.obj17, "BackgroundColor3", Color3.fromRGB(255,255,255))
 pcall(chilliSetProperty, objects.obj17, "BackgroundTransparency", 0)
-pcall(chilliSetProperty, objects.obj17, "BorderColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj17, "BorderColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj17, "BorderSizePixel", 0)
 pcall(chilliSetProperty, objects.obj17, "ClipsDescendants", false)
 pcall(chilliSetProperty, objects.obj17, "Position", UDim2.new(0.5,0,0,0))
@@ -652,15 +496,15 @@ pcall(chilliSetProperty, objects.obj17, "AutomaticSize", Enum.AutomaticSize.None
 pcall(chilliSetProperty, objects.obj17, "LayoutOrder", 0)
 objects.obj17.Parent = objects.obj16
 
-objects.obj18 = chilliNew("Frame")
+objects.obj18 = Instance.new("Frame")
 pcall(chilliSetProperty, objects.obj18, "Name", "Transparent")
 pcall(chilliSetProperty, objects.obj18, "Archivable", true)
 pcall(chilliSetProperty, objects.obj18, "Visible", true)
 pcall(chilliSetProperty, objects.obj18, "Active", false)
 pcall(chilliSetProperty, objects.obj18, "AnchorPoint", Vector2.new(0.5,0.5))
-pcall(chilliSetProperty, objects.obj18, "BackgroundColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj18, "BackgroundColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj18, "BackgroundTransparency", 0.8999999761581421)
-pcall(chilliSetProperty, objects.obj18, "BorderColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj18, "BorderColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj18, "BorderSizePixel", 0)
 pcall(chilliSetProperty, objects.obj18, "ClipsDescendants", false)
 pcall(chilliSetProperty, objects.obj18, "Position", UDim2.new(0.5,0,0.5,0))
@@ -674,15 +518,15 @@ pcall(chilliSetProperty, objects.obj18, "AutomaticSize", Enum.AutomaticSize.None
 pcall(chilliSetProperty, objects.obj18, "LayoutOrder", 0)
 objects.obj18.Parent = objects.obj17
 
-objects.obj19 = chilliNew("ImageLabel")
+objects.obj19 = Instance.new("ImageLabel")
 pcall(chilliSetProperty, objects.obj19, "Name", "Pattern")
 pcall(chilliSetProperty, objects.obj19, "Archivable", true)
 pcall(chilliSetProperty, objects.obj19, "Visible", true)
 pcall(chilliSetProperty, objects.obj19, "Active", false)
 pcall(chilliSetProperty, objects.obj19, "AnchorPoint", Vector2.new(0.5,0.5))
-pcall(chilliSetProperty, objects.obj19, "BackgroundColor3", chilliColor(255,255,255))
+pcall(chilliSetProperty, objects.obj19, "BackgroundColor3", Color3.fromRGB(255,255,255))
 pcall(chilliSetProperty, objects.obj19, "BackgroundTransparency", 1)
-pcall(chilliSetProperty, objects.obj19, "BorderColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj19, "BorderColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj19, "BorderSizePixel", 0)
 pcall(chilliSetProperty, objects.obj19, "ClipsDescendants", false)
 pcall(chilliSetProperty, objects.obj19, "Position", UDim2.new(0.5,0,0.5,0))
@@ -695,7 +539,7 @@ pcall(chilliSetProperty, objects.obj19, "ZIndex", 1)
 pcall(chilliSetProperty, objects.obj19, "AutomaticSize", Enum.AutomaticSize.None)
 pcall(chilliSetProperty, objects.obj19, "LayoutOrder", 0)
 pcall(chilliSetProperty, objects.obj19, "Image", "")
-pcall(chilliSetProperty, objects.obj19, "ImageColor3", chilliColor(255,255,255))
+pcall(chilliSetProperty, objects.obj19, "ImageColor3", Color3.fromRGB(255,255,255))
 pcall(chilliSetProperty, objects.obj19, "ImageTransparency", 0.5)
 pcall(chilliSetProperty, objects.obj19, "ScaleType", Enum.ScaleType.Tile)
 pcall(chilliSetProperty, objects.obj19, "SliceCenter", Rect.new(0,0,0,0))
@@ -704,15 +548,15 @@ pcall(chilliSetProperty, objects.obj19, "TileSize", UDim2.new(2,0,2,0))
 pcall(chilliSetProperty, objects.obj19, "ResampleMode", Enum.ResamplerMode.Default)
 objects.obj19.Parent = objects.obj18
 
-objects.obj20 = chilliNew("TextLabel")
+objects.obj20 = Instance.new("TextLabel")
 pcall(chilliSetProperty, objects.obj20, "Name", "Label")
 pcall(chilliSetProperty, objects.obj20, "Archivable", true)
 pcall(chilliSetProperty, objects.obj20, "Visible", true)
 pcall(chilliSetProperty, objects.obj20, "Active", false)
 pcall(chilliSetProperty, objects.obj20, "AnchorPoint", Vector2.new(0.5,0.5))
-pcall(chilliSetProperty, objects.obj20, "BackgroundColor3", chilliColor(239,220,203))
+pcall(chilliSetProperty, objects.obj20, "BackgroundColor3", Color3.fromRGB(239,220,203))
 pcall(chilliSetProperty, objects.obj20, "BackgroundTransparency", 1)
-pcall(chilliSetProperty, objects.obj20, "BorderColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj20, "BorderColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj20, "BorderSizePixel", 0)
 pcall(chilliSetProperty, objects.obj20, "ClipsDescendants", false)
 pcall(chilliSetProperty, objects.obj20, "Position", UDim2.new(0.5,0,0.5,0))
@@ -725,9 +569,9 @@ pcall(chilliSetProperty, objects.obj20, "ZIndex", 6)
 pcall(chilliSetProperty, objects.obj20, "AutomaticSize", Enum.AutomaticSize.None)
 pcall(chilliSetProperty, objects.obj20, "LayoutOrder", 0)
 pcall(chilliSetProperty, objects.obj20, "Text", "X")
-pcall(chilliSetProperty, objects.obj20, "TextColor3", chilliColor(255,255,255))
+pcall(chilliSetProperty, objects.obj20, "TextColor3", Color3.fromRGB(255,255,255))
 pcall(chilliSetProperty, objects.obj20, "TextTransparency", 0)
-pcall(chilliSetProperty, objects.obj20, "TextStrokeColor3", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj20, "TextStrokeColor3", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj20, "TextStrokeTransparency", 1)
 pcall(chilliSetProperty, objects.obj20, "TextSize", 14)
 pcall(chilliSetProperty, objects.obj20, "TextScaled", true)
@@ -744,7 +588,7 @@ objects.obj21 = Instance.new("UIStroke")
 pcall(chilliSetProperty, objects.obj21, "Name", "UIStroke")
 pcall(chilliSetProperty, objects.obj21, "Archivable", true)
 pcall(chilliSetProperty, objects.obj21, "ApplyStrokeMode", Enum.ApplyStrokeMode.Contextual)
-pcall(chilliSetProperty, objects.obj21, "Color", chilliColor(0,0,0))
+pcall(chilliSetProperty, objects.obj21, "Color", Color3.fromRGB(0,0,0))
 pcall(chilliSetProperty, objects.obj21, "Enabled", true)
 pcall(chilliSetProperty, objects.obj21, "LineJoinMode", Enum.LineJoinMode.Round)
 pcall(chilliSetProperty, objects.obj21, "Thickness", 0.10999999940395355)
@@ -754,7 +598,7 @@ objects.obj21.Parent = objects.obj20
 objects.obj22 = Instance.new("UIGradient")
 pcall(chilliSetProperty, objects.obj22, "Name", "UIGradient")
 pcall(chilliSetProperty, objects.obj22, "Archivable", true)
-pcall(chilliSetProperty, objects.obj22, "Color", ColorSequence.new({ColorSequenceKeypoint.new(0,chilliColor(255,130,130)),ColorSequenceKeypoint.new(1,chilliColor(239,28,28))}))
+pcall(chilliSetProperty, objects.obj22, "Color", ColorSequence.new({ColorSequenceKeypoint.new(0,Color3.fromRGB(255,130,130)),ColorSequenceKeypoint.new(1,Color3.fromRGB(239,28,28))}))
 pcall(chilliSetProperty, objects.obj22, "Enabled", true)
 pcall(chilliSetProperty, objects.obj22, "Offset", Vector2.new(0,0))
 pcall(chilliSetProperty, objects.obj22, "Rotation", 90)
@@ -765,7 +609,7 @@ objects.obj23 = Instance.new("UIStroke")
 pcall(chilliSetProperty, objects.obj23, "Name", "UIStroke")
 pcall(chilliSetProperty, objects.obj23, "Archivable", true)
 pcall(chilliSetProperty, objects.obj23, "ApplyStrokeMode", Enum.ApplyStrokeMode.Border)
-pcall(chilliSetProperty, objects.obj23, "Color", chilliColor(76,0,0))
+pcall(chilliSetProperty, objects.obj23, "Color", Color3.fromRGB(76,0,0))
 pcall(chilliSetProperty, objects.obj23, "Enabled", true)
 pcall(chilliSetProperty, objects.obj23, "LineJoinMode", Enum.LineJoinMode.Round)
 pcall(chilliSetProperty, objects.obj23, "Thickness", 0.09000000357627869)
@@ -780,15 +624,15 @@ pcall(chilliSetProperty, objects.obj24, "AspectType", Enum.AspectType.FitWithinM
 pcall(chilliSetProperty, objects.obj24, "DominantAxis", Enum.DominantAxis.Width)
 objects.obj24.Parent = objects.obj2
 
-objects.obj25 = chilliNew("ScrollingFrame")
+objects.obj25 = Instance.new("ScrollingFrame")
 pcall(chilliSetProperty, objects.obj25, "Name", "List")
 pcall(chilliSetProperty, objects.obj25, "Archivable", true)
 pcall(chilliSetProperty, objects.obj25, "Visible", true)
 pcall(chilliSetProperty, objects.obj25, "Active", true)
 pcall(chilliSetProperty, objects.obj25, "AnchorPoint", Vector2.new(0.5,0.5))
-pcall(chilliSetProperty, objects.obj25, "BackgroundColor3", chilliColor(255,255,255))
+pcall(chilliSetProperty, objects.obj25, "BackgroundColor3", Color3.fromRGB(255,255,255))
 pcall(chilliSetProperty, objects.obj25, "BackgroundTransparency", 1)
-pcall(chilliSetProperty, objects.obj25, "BorderColor3", chilliColor(27,42,53))
+pcall(chilliSetProperty, objects.obj25, "BorderColor3", Color3.fromRGB(27,42,53))
 pcall(chilliSetProperty, objects.obj25, "BorderSizePixel", 0)
 pcall(chilliSetProperty, objects.obj25, "ClipsDescendants", true)
 pcall(chilliSetProperty, objects.obj25, "Position", UDim2.new(0.5000000596046448,0,0.5701961517333984,0))
@@ -804,7 +648,7 @@ pcall(chilliSetProperty, objects.obj25, "CanvasPosition", Vector2.new(0,0))
 pcall(chilliSetProperty, objects.obj25, "CanvasSize", UDim2.new(0,0,0,642))
 pcall(chilliSetProperty, objects.obj25, "AutomaticCanvasSize", Enum.AutomaticSize.None)
 pcall(chilliSetProperty, objects.obj25, "ScrollBarThickness", 6)
-pcall(chilliSetProperty, objects.obj25, "ScrollBarImageColor3", chilliColor(255,255,255))
+pcall(chilliSetProperty, objects.obj25, "ScrollBarImageColor3", Color3.fromRGB(255,255,255))
 pcall(chilliSetProperty, objects.obj25, "ScrollBarImageTransparency", 0)
 pcall(chilliSetProperty, objects.obj25, "ScrollingDirection", Enum.ScrollingDirection.XY)
 pcall(chilliSetProperty, objects.obj25, "ScrollingEnabled", true)
@@ -999,7 +843,7 @@ if gameId ~= 7709344486 then
 end
 launcherGui.Parent = parent
 
-local launcherRoot = chilliNew("Frame")
+local launcherRoot = Instance.new("Frame")
 launcherRoot.Name = "LeftCenter"
 launcherRoot.AnchorPoint = sourceLeftCenter
     and sourceLeftCenter.AnchorPoint
@@ -1022,7 +866,7 @@ launcherRootAspect.AspectType = sourceRootAspect and sourceRootAspect.AspectType
 launcherRootAspect.DominantAxis = sourceRootAspect and sourceRootAspect.DominantAxis or Enum.DominantAxis.Width
 launcherRootAspect.Parent = launcherRoot
 
-local launcherButtons = chilliNew("Frame")
+local launcherButtons = Instance.new("Frame")
 launcherButtons.Name = "Buttons"
 launcherButtons.AnchorPoint = sourceButtons
     and sourceButtons.AnchorPoint
@@ -1046,7 +890,7 @@ launcherButtonsAspect.DominantAxis = sourceButtonsAspect and sourceButtonsAspect
 launcherButtonsAspect.Parent = launcherButtons
 
 local chilliButton = Instance.new("ImageButton")
-chilliButton.Name = "NiCHHubButton"
+chilliButton.Name = "Chilli"
 chilliButton.AnchorPoint = Vector2.new(0.5, 0.5)
 chilliButton.Position = sourceShop
     and UDim2.fromScale(0.5, 0)
@@ -1056,7 +900,7 @@ chilliButton.Size = sourceShop
     or UDim2.fromScale(1, 0.3015267)
 chilliButton.BackgroundColor3 = sourceShop
     and sourceShop.BackgroundColor3
-    or chilliColor(255, 255, 255)
+    or Color3.fromRGB(255, 255, 255)
 chilliButton.BackgroundTransparency = sourceShop
     and sourceShop.BackgroundTransparency
     or 1
@@ -1071,7 +915,7 @@ chilliButton.HoverImage = sourceShop
 chilliButton.PressedImage = sourceShop and sourceShop.PressedImage or ""
 chilliButton.ImageColor3 = sourceShop
     and sourceShop.ImageColor3
-    or chilliColor(255, 255, 255)
+    or Color3.fromRGB(255, 255, 255)
 chilliButton.ImageTransparency = sourceShop
     and sourceShop.ImageTransparency
     or 0
@@ -1096,15 +940,15 @@ chilliButton.Parent = launcherButtons
 
 local fallbackButtonGradient = Instance.new("UIGradient")
 fallbackButtonGradient.Color = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, chilliColor(111, 145, 161)),
-    ColorSequenceKeypoint.new(1, chilliColor(52, 72, 84)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(111, 145, 161)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(52, 72, 84)),
 })
 fallbackButtonGradient.Rotation = 90
 fallbackButtonGradient.Enabled = false
 fallbackButtonGradient.Parent = chilliButton
 
 local fallbackButtonStroke = Instance.new("UIStroke")
-fallbackButtonStroke.Color = chilliColor(34, 45, 52)
+fallbackButtonStroke.Color = Color3.fromRGB(34, 45, 52)
 fallbackButtonStroke.Thickness = 0.025
 fallbackButtonStroke.Enabled = false
 pcall(function()
@@ -1113,20 +957,20 @@ end)
 fallbackButtonStroke.Parent = chilliButton
 
 local chilliViewport = Instance.new("ViewportFrame")
-chilliViewport.Name = "NiCHHubViewport"
+chilliViewport.Name = "ChilliViewport"
 chilliViewport.AnchorPoint = sourceShopIcon and sourceShopIcon.AnchorPoint
     or Vector2.new(0.5, 0.5)
 chilliViewport.Position = sourceShopIcon and sourceShopIcon.Position
     or UDim2.fromScale(0.5, 0.5)
 chilliViewport.Size = sourceShopIcon and sourceShopIcon.Size
     or UDim2.fromScale(0.76055, 0.76055)
-chilliViewport.BackgroundColor3 = chilliColor(0, 0, 0)
+chilliViewport.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 chilliViewport.BackgroundTransparency = 1
 chilliViewport.BorderSizePixel = 0
-chilliViewport.Ambient = chilliColor(255, 255, 255)
-chilliViewport.LightColor = chilliColor(255, 255, 255)
+chilliViewport.Ambient = Color3.fromRGB(255, 255, 255)
+chilliViewport.LightColor = Color3.fromRGB(255, 255, 255)
 chilliViewport.LightDirection = Vector3.new(-1, -1, -1)
-chilliViewport.ImageColor3 = chilliColor(255, 255, 255)
+chilliViewport.ImageColor3 = Color3.fromRGB(255, 255, 255)
 chilliViewport.ImageTransparency = 0
 chilliViewport.LayoutOrder = 0
 chilliViewport.ZIndex = sourceShopIcon and sourceShopIcon.ZIndex or 0
@@ -1204,7 +1048,7 @@ task.defer(function()
     frameChilliSpider()
 end)
 
-local chilliText = chilliNew("TextLabel")
+local chilliText = Instance.new("TextLabel")
 chilliText.Name = "Txt"
 chilliText.AnchorPoint = sourceShopText and sourceShopText.AnchorPoint or Vector2.new(0.5, 0.5)
 chilliText.Position = sourceShopText and sourceShopText.Position or UDim2.fromScale(0.5, 0.9367089)
@@ -1215,8 +1059,8 @@ chilliText.FontFace = sourceShopText and sourceShopText.FontFace or Font.new(
     "rbxasset://fonts/families/GothamSSm.json",
     Enum.FontWeight.ExtraBold
 )
-chilliText.Text = "NiCH HUB"
-chilliText.TextColor3 = sourceShopText and sourceShopText.TextColor3 or chilliColor(255, 255, 255)
+chilliText.Text = "Chilli Hub"
+chilliText.TextColor3 = sourceShopText and sourceShopText.TextColor3 or Color3.fromRGB(255, 255, 255)
 chilliText.TextTransparency = sourceShopText and sourceShopText.TextTransparency or 0
 chilliText.TextScaled = sourceShopText == nil or sourceShopText.TextScaled
 chilliText.TextWrapped = sourceShopText == nil or sourceShopText.TextWrapped
@@ -1228,7 +1072,7 @@ chilliText.Parent = chilliButton
 local sourceTextStroke = sourceShopText and sourceShopText:FindFirstChildOfClass("UIStroke")
 local chilliTextStroke = Instance.new("UIStroke")
 chilliTextStroke.ApplyStrokeMode = sourceTextStroke and sourceTextStroke.ApplyStrokeMode or Enum.ApplyStrokeMode.Contextual
-chilliTextStroke.Color = sourceTextStroke and sourceTextStroke.Color or chilliColor(0, 0, 0)
+chilliTextStroke.Color = sourceTextStroke and sourceTextStroke.Color or Color3.fromRGB(0, 0, 0)
 chilliTextStroke.LineJoinMode = sourceTextStroke and sourceTextStroke.LineJoinMode or Enum.LineJoinMode.Round
 chilliTextStroke.Thickness = sourceTextStroke and sourceTextStroke.Thickness or 2
 chilliTextStroke.Transparency = sourceTextStroke and sourceTextStroke.Transparency or 0.35
@@ -2441,7 +2285,7 @@ local RESIZE_LIMITS = {
 
 local RESIZE_KEEPS_OPTION_WIDTH = false
 
-local resizeGrip = chilliNew("TextButton")
+local resizeGrip = Instance.new("TextButton")
 resizeGrip.Name = "ResizeGrip"
 resizeGrip.Active = true
 resizeGrip.AutoButtonColor = false
@@ -2468,11 +2312,11 @@ for _, bar in ipairs({
     { 0.68, 0.68, 0.54 },
     { 0.84, 0.84, 0.22 },
 }) do
-    local piece = chilliNew("Frame")
+    local piece = Instance.new("Frame")
     piece.Name = "GripBar"
     piece.Active = false
     piece.AnchorPoint = Vector2.new(0.5, 0.5)
-    piece.BackgroundColor3 = chilliColor(255, 255, 255)
+    piece.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     piece.BackgroundTransparency = 0.35
     piece.BorderSizePixel = 0
     piece.Position = UDim2.fromScale(bar[1], bar[2])
@@ -2653,15 +2497,15 @@ local italicTextFont = Font.new(
 )
 
 local shinyTextGradient = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, chilliColor(255, 255, 255)),
-    ColorSequenceKeypoint.new(0.486159176, chilliColor(255, 255, 255)),
-    ColorSequenceKeypoint.new(0.519031167, chilliColor(221, 221, 221)),
-    ColorSequenceKeypoint.new(1, chilliColor(236, 236, 236)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 255, 255)),
+    ColorSequenceKeypoint.new(0.486159176, Color3.fromRGB(255, 255, 255)),
+    ColorSequenceKeypoint.new(0.519031167, Color3.fromRGB(221, 221, 221)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(236, 236, 236)),
 })
 
 local blueStrokeGradient = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, chilliColor(0, 36, 84)),
-    ColorSequenceKeypoint.new(1, chilliColor(0, 31, 54)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 36, 84)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(0, 31, 54)),
 })
 
 local function clearDirectGradients(container)
@@ -2700,9 +2544,9 @@ local function applyShinyTextStyle(label, fontFace)
     if fontFace then
         label.FontFace = fontFace
     end
-    label.TextColor3 = chilliColor(255, 255, 255)
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
     label.TextTransparency = 0
-    label.TextStrokeColor3 = chilliColor(0, 0, 0)
+    label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
     label.TextStrokeTransparency = 1
     label.TextScaled = true
     label.LineHeight = 1
@@ -2711,7 +2555,7 @@ local function applyShinyTextStyle(label, fontFace)
 
     local stroke = getTextStroke(label)
     clearDirectGradients(stroke)
-    configureScaledStroke(stroke, chilliColor(255, 255, 255), 0.06499999761581421)
+    configureScaledStroke(stroke, Color3.fromRGB(255, 255, 255), 0.06499999761581421)
 
     local strokeGradient = Instance.new("UIGradient")
     strokeGradient.Name = "StrokeStyleGradient"
@@ -2732,9 +2576,9 @@ end
 
 local function applyPlainTextStyle(label)
     label.FontFace = normalTextFont
-    label.TextColor3 = chilliColor(255, 255, 255)
+    label.TextColor3 = Color3.fromRGB(255, 255, 255)
     label.TextTransparency = 0
-    label.TextStrokeColor3 = chilliColor(0, 0, 0)
+    label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
     label.TextStrokeTransparency = 1
     label.TextScaled = true
     label.LineHeight = 1
@@ -2743,19 +2587,19 @@ local function applyPlainTextStyle(label)
 
     local stroke = getTextStroke(label)
     clearDirectGradients(stroke)
-    configureScaledStroke(stroke, chilliColor(0, 0, 0), 0.07999999821186066)
+    configureScaledStroke(stroke, Color3.fromRGB(0, 0, 0), 0.07999999821186066)
 end
 
 local rebirthOuterGradient = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, chilliColor(255, 193, 194)),
-    ColorSequenceKeypoint.new(0.0570934266, chilliColor(255, 132, 123)),
-    ColorSequenceKeypoint.new(1, chilliColor(239, 28, 28)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 193, 194)),
+    ColorSequenceKeypoint.new(0.0570934266, Color3.fromRGB(255, 132, 123)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(239, 28, 28)),
 })
 
 local rebirthInnerGradient = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, chilliColor(255, 193, 194)),
-    ColorSequenceKeypoint.new(0.0155709349, chilliColor(255, 132, 123)),
-    ColorSequenceKeypoint.new(1, chilliColor(239, 28, 28)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(255, 193, 194)),
+    ColorSequenceKeypoint.new(0.0155709349, Color3.fromRGB(255, 132, 123)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(239, 28, 28)),
 })
 
 local function addRedGradient(parent, name, color)
@@ -2770,7 +2614,7 @@ end
 local function addScaledStroke(parent, mode, thickness)
     local stroke = Instance.new("UIStroke")
     stroke.ApplyStrokeMode = mode
-    stroke.Color = chilliColor(0, 0, 0)
+    stroke.Color = Color3.fromRGB(0, 0, 0)
     stroke.LineJoinMode = Enum.LineJoinMode.Round
     stroke.Thickness = thickness
     stroke.Transparency = 0
@@ -2784,7 +2628,7 @@ local function addScaledStroke(parent, mode, thickness)
 end
 
 local function createRebirthStyleButton(parent, text, layoutOrder)
-    local button = chilliNew("TextButton")
+    local button = Instance.new("TextButton")
     button.Name = text
     button.Active = true
     button.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -2801,11 +2645,11 @@ local function createRebirthStyleButton(parent, text, layoutOrder)
     buttonScale.Scale = 1
     buttonScale.Parent = button
 
-    local base = chilliNew("Frame")
+    local base = Instance.new("Frame")
     base.Name = "Main"
     base.Active = false
     base.AnchorPoint = Vector2.new(0.5, 0.5)
-    base.BackgroundColor3 = chilliColor(175, 0, 0)
+    base.BackgroundColor3 = Color3.fromRGB(175, 0, 0)
     base.BorderSizePixel = 0
     base.Position = UDim2.fromScale(0.5, 0.5)
     base.Size = UDim2.fromScale(1, 0.92)
@@ -2813,11 +2657,11 @@ local function createRebirthStyleButton(parent, text, layoutOrder)
     base.Parent = button
     addScaledStroke(base, Enum.ApplyStrokeMode.Border, 0.0599999987)
 
-    local colorFrame = chilliNew("Frame")
+    local colorFrame = Instance.new("Frame")
     colorFrame.Name = "ColorFrame"
     colorFrame.Active = false
     colorFrame.AnchorPoint = Vector2.new(0.5, 0)
-    colorFrame.BackgroundColor3 = chilliColor(255, 255, 255)
+    colorFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     colorFrame.BorderSizePixel = 0
     colorFrame.Position = UDim2.fromScale(0.5, 0)
     colorFrame.Size = UDim2.fromScale(1, 0.9)
@@ -2825,11 +2669,11 @@ local function createRebirthStyleButton(parent, text, layoutOrder)
     colorFrame.Parent = base
     addRedGradient(colorFrame, "RedGradient", rebirthOuterGradient)
 
-    local highlight = chilliNew("Frame")
+    local highlight = Instance.new("Frame")
     highlight.Name = "Transparent"
     highlight.Active = false
     highlight.AnchorPoint = Vector2.new(0.5, 0.5)
-    highlight.BackgroundColor3 = chilliColor(255, 255, 255)
+    highlight.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     highlight.BorderSizePixel = 0
     highlight.Position = UDim2.fromScale(0.5, 0.5)
     highlight.Size = UDim2.fromScale(0.965, 0.88)
@@ -2837,7 +2681,7 @@ local function createRebirthStyleButton(parent, text, layoutOrder)
     highlight.Parent = colorFrame
     addRedGradient(highlight, "RedGradient", rebirthInnerGradient)
 
-    local label = chilliNew("TextLabel")
+    local label = Instance.new("TextLabel")
     label.Name = "Label"
     label.Active = false
     label.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -2882,7 +2726,7 @@ local function createRebirthStyleButton(parent, text, layoutOrder)
     return button
 end
 
-local sideButtons = chilliNew("Frame")
+local sideButtons = Instance.new("Frame")
 sideButtons.Name = "SideButtons"
 sideButtons.Active = false
 sideButtons.AnchorPoint = Vector2.new(1, 0.5)
@@ -2910,8 +2754,8 @@ sideButtons.Parent = mainFrame
 
 
 local ACCENT_GRADIENT = ColorSequence.new({
-    ColorSequenceKeypoint.new(0, chilliColor(58, 255, 55)),
-    ColorSequenceKeypoint.new(1, chilliColor(20, 109, 0)),
+    ColorSequenceKeypoint.new(0, Color3.fromRGB(58, 255, 55)),
+    ColorSequenceKeypoint.new(1, Color3.fromRGB(20, 109, 0)),
 })
 
 
@@ -2931,10 +2775,10 @@ local CONTROL_LAYOUT = {
 
 
 
-local CHEVRON_COLOR = chilliColor(58, 255, 55)
+local CHEVRON_COLOR = Color3.fromRGB(58, 255, 55)
 
 
-local UNIT_CHEVRON_COLOR = chilliColor(255, 255, 255)
+local UNIT_CHEVRON_COLOR = Color3.fromRGB(255, 255, 255)
 
 
 local MAX_CHIPS_PER_LINE = 4
@@ -3015,11 +2859,11 @@ end
 
 
 local function buildRowPlate(parent, labelText)
-    local main = chilliNew("Frame")
+    local main = Instance.new("Frame")
     main.Name = "Main"
     main.Active = false
     main.AnchorPoint = Vector2.new(0.5, 0.5)
-    main.BackgroundColor3 = chilliColor(0, 0, 0)
+    main.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     main.BackgroundTransparency = 0.5
     main.BorderSizePixel = 0
     main.Position = UDim2.fromScale(0.5, 0.5)
@@ -3028,7 +2872,7 @@ local function buildRowPlate(parent, labelText)
     main.Parent = parent
     addScaledStroke(main, Enum.ApplyStrokeMode.Border, 0.05)
 
-    local label = chilliNew("TextLabel")
+    local label = Instance.new("TextLabel")
     label.Name = "Label"
     label.Active = false
     label.AnchorPoint = Vector2.new(0, 0.5)
@@ -3051,7 +2895,7 @@ end
 
 
 local function buildFixedRow(name, labelText)
-    local row = chilliNew("Frame")
+    local row = Instance.new("Frame")
     row.Name = name
     row.Active = false
     row.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -3100,7 +2944,7 @@ local function createDropdownRow(
     action,
     noteText
 )
-    local row = chilliNew("Frame")
+    local row = Instance.new("Frame")
     row.Name = name
     row.Active = false
     row.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -3114,7 +2958,7 @@ local function createDropdownRow(
     row.Size = UDim2.new(ROW_WIDTH_SCALE, 0, 0, 0)
     row.ZIndex = 3
 
-    local head = chilliNew("Frame")
+    local head = Instance.new("Frame")
     head.Name = "Head"
     head.Active = false
     head.AnchorPoint = Vector2.new(0.5, 0)
@@ -3127,12 +2971,12 @@ local function createDropdownRow(
 
     local main, titleLabel = buildRowPlate(head, labelText)
 
-    local box = chilliNew("TextButton")
+    local box = Instance.new("TextButton")
     box.Name = "Dropdown"
     box.Active = true
     box.AutoButtonColor = false
     box.AnchorPoint = Vector2.new(0.5, 0.5)
-    box.BackgroundColor3 = chilliColor(0, 0, 0)
+    box.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     box.BackgroundTransparency = 0.6
     box.BorderSizePixel = 0
     box.Position = UDim2.fromScale(CONTROL_LAYOUT.WideCenterX, 0.5)
@@ -3147,7 +2991,7 @@ local function createDropdownRow(
     local noteVScale = ROW_ASPECT_WITH_NOTE / ROW_ASPECT
     local boxLeft = CONTROL_LAYOUT.WideCenterX - CONTROL_LAYOUT.WideWidth / 2
 
-    local noteLabel = chilliNew("TextLabel")
+    local noteLabel = Instance.new("TextLabel")
     noteLabel.Name = "Note"
     noteLabel.Active = false
     noteLabel.AnchorPoint = Vector2.new(0, 0.5)
@@ -3187,7 +3031,7 @@ local function createDropdownRow(
     end
     applyNoteLayout()
 
-    local value = chilliNew("TextLabel")
+    local value = Instance.new("TextLabel")
     value.Name = "Value"
     value.Active = false
     value.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -3205,11 +3049,11 @@ local function createDropdownRow(
     applyPlainTextStyle(value)
 
     
-    local divider = chilliNew("Frame")
+    local divider = Instance.new("Frame")
     divider.Name = "Divider"
     divider.Active = false
     divider.AnchorPoint = Vector2.new(0.5, 0.5)
-    divider.BackgroundColor3 = chilliColor(0, 0, 0)
+    divider.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     divider.BackgroundTransparency = 0.3
     divider.BorderSizePixel = 0
     divider.Position = UDim2.fromScale(0.8, 0.5)
@@ -3217,7 +3061,7 @@ local function createDropdownRow(
     divider.ZIndex = 7
     divider.Parent = box
 
-    local caret = chilliNew("Frame")
+    local caret = Instance.new("Frame")
     caret.Name = "Caret"
     caret.Active = false
     caret.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -3240,7 +3084,7 @@ local function createDropdownRow(
     
     
     for _, arm in ipairs({ { 0.335355, 45 }, { 0.664645, -45 } }) do
-        local piece = chilliNew("Frame")
+        local piece = Instance.new("Frame")
         piece.Name = "Arm"
         piece.Active = false
         piece.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -3261,7 +3105,7 @@ local function createDropdownRow(
     
     
     
-    local menuClip = chilliNew("Frame")
+    local menuClip = Instance.new("Frame")
     menuClip.Name = "Menu"
     menuClip.Active = false
     menuClip.AnchorPoint = Vector2.new(0.5, 0)
@@ -3276,10 +3120,10 @@ local function createDropdownRow(
     
     local searchField, searchBox
     if #options >= SEARCH_MIN_OPTIONS then
-        searchField = chilliNew("Frame")
+        searchField = Instance.new("Frame")
         searchField.Name = "Search"
         searchField.Active = false
-        searchField.BackgroundColor3 = chilliColor(0, 0, 0)
+        searchField.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         searchField.BackgroundTransparency = 0.6
         searchField.BorderSizePixel = 0
         searchField.Position = UDim2.new(0, 0, 0, 0)
@@ -3288,7 +3132,7 @@ local function createDropdownRow(
         searchField.Parent = menuClip
         addScaledStroke(searchField, Enum.ApplyStrokeMode.Border, 0.07)
 
-        searchBox = chilliNew("TextBox")
+        searchBox = Instance.new("TextBox")
         searchBox.Name = "Input"
         searchBox.Active = true
         searchBox.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -3300,7 +3144,7 @@ local function createDropdownRow(
         searchBox.Size = UDim2.fromScale(0.94, 0.56)
         searchBox.Text = ""
         searchBox.PlaceholderText = "Search..."
-        searchBox.PlaceholderColor3 = chilliColor(198, 198, 198)
+        searchBox.PlaceholderColor3 = Color3.fromRGB(198, 198, 198)
         searchBox.TextXAlignment = Enum.TextXAlignment.Center
         searchBox.TextYAlignment = Enum.TextYAlignment.Center
         searchBox.ZIndex = 9
@@ -3308,7 +3152,7 @@ local function createDropdownRow(
         applyPlainTextStyle(searchBox)
     end
 
-    local emptyLabel = chilliNew("TextLabel")
+    local emptyLabel = Instance.new("TextLabel")
     emptyLabel.Name = "Empty"
     emptyLabel.Active = false
     emptyLabel.BackgroundTransparency = 1
@@ -3382,7 +3226,7 @@ local function createDropdownRow(
 
         
         
-        hintLabel = chilliNew("TextLabel")
+        hintLabel = Instance.new("TextLabel")
         hintLabel.Name = "Hint"
         hintLabel.Active = false
         hintLabel.BackgroundTransparency = 1
@@ -3401,7 +3245,7 @@ local function createDropdownRow(
         
         
         
-        applyButton = chilliNew("TextButton")
+        applyButton = Instance.new("TextButton")
         applyButton.Name = "Apply"
         applyButton.Active = true
         applyButton.AutoButtonColor = false
@@ -3417,11 +3261,11 @@ local function createDropdownRow(
         applyButton.Parent = menuClip
         attachScaleFeedback(applyButton, 1.03, 0.96)
 
-        local applyBase = chilliNew("Frame")
+        local applyBase = Instance.new("Frame")
         applyBase.Name = "Main"
         applyBase.Active = false
         applyBase.AnchorPoint = Vector2.new(0.5, 0.5)
-        applyBase.BackgroundColor3 = chilliColor(175, 0, 0)
+        applyBase.BackgroundColor3 = Color3.fromRGB(175, 0, 0)
         applyBase.BorderSizePixel = 0
         applyBase.Position = UDim2.fromScale(0.5, 0.5)
         applyBase.Size = UDim2.fromScale(1, 1)
@@ -3429,11 +3273,11 @@ local function createDropdownRow(
         applyBase.Parent = applyButton
         addScaledStroke(applyBase, Enum.ApplyStrokeMode.Border, 0.07)
 
-        local applyColor = chilliNew("Frame")
+        local applyColor = Instance.new("Frame")
         applyColor.Name = "ColorFrame"
         applyColor.Active = false
         applyColor.AnchorPoint = Vector2.new(0.5, 0)
-        applyColor.BackgroundColor3 = chilliColor(255, 255, 255)
+        applyColor.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         applyColor.BorderSizePixel = 0
         applyColor.Position = UDim2.fromScale(0.5, 0)
         applyColor.Size = UDim2.fromScale(1, 0.9)
@@ -3441,11 +3285,11 @@ local function createDropdownRow(
         applyColor.Parent = applyBase
         addRedGradient(applyColor, "RedGradient", rebirthOuterGradient)
 
-        local applyHighlight = chilliNew("Frame")
+        local applyHighlight = Instance.new("Frame")
         applyHighlight.Name = "Transparent"
         applyHighlight.Active = false
         applyHighlight.AnchorPoint = Vector2.new(0.5, 0.5)
-        applyHighlight.BackgroundColor3 = chilliColor(255, 255, 255)
+        applyHighlight.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         applyHighlight.BorderSizePixel = 0
         applyHighlight.Position = UDim2.fromScale(0.5, 0.5)
         applyHighlight.Size = UDim2.fromScale(0.965, 0.88)
@@ -3453,7 +3297,7 @@ local function createDropdownRow(
         applyHighlight.Parent = applyColor
         addRedGradient(applyHighlight, "RedGradient", rebirthInnerGradient)
 
-        applyCaption = chilliNew("TextLabel")
+        applyCaption = Instance.new("TextLabel")
         applyCaption.Name = "Label"
         applyCaption.Active = false
         applyCaption.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -3505,12 +3349,12 @@ local function createDropdownRow(
     end
 
     for index, optionText in ipairs(options) do
-        local item = chilliNew("TextButton")
+        local item = Instance.new("TextButton")
         item.Name = "Option" .. index
         item.Active = true
         item.AutoButtonColor = false
         item.AnchorPoint = Vector2.new(0, 0)
-        item.BackgroundColor3 = chilliColor(0, 0, 0)
+        item.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         item.BackgroundTransparency = 0.45
         item.BorderSizePixel = 0
         item.LayoutOrder = index
@@ -3524,11 +3368,11 @@ local function createDropdownRow(
         
         local accent
         if not multiSelect then
-            accent = chilliNew("Frame")
+            accent = Instance.new("Frame")
             accent.Name = "Accent"
             accent.Active = false
             accent.AnchorPoint = Vector2.new(0, 0.5)
-            accent.BackgroundColor3 = chilliColor(255, 255, 255)
+            accent.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             accent.BorderSizePixel = 0
             accent.Position = UDim2.fromScale(0, 0.5)
             accent.Size = UDim2.fromScale(0, 1)
@@ -3540,11 +3384,11 @@ local function createDropdownRow(
         
         local tickFill
         if multiSelect then
-            local tickBox = chilliNew("Frame")
+            local tickBox = Instance.new("Frame")
             tickBox.Name = "Tick"
             tickBox.Active = false
             tickBox.AnchorPoint = Vector2.new(0, 0.5)
-            tickBox.BackgroundColor3 = chilliColor(0, 0, 0)
+            tickBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
             tickBox.BackgroundTransparency = 0.3
             tickBox.BorderSizePixel = 0
             tickBox.Position = UDim2.fromScale(0.055, 0.5)
@@ -3559,11 +3403,11 @@ local function createDropdownRow(
             tickAspect.DominantAxis = Enum.DominantAxis.Height
             tickAspect.Parent = tickBox
 
-            tickFill = chilliNew("Frame")
+            tickFill = Instance.new("Frame")
             tickFill.Name = "Fill"
             tickFill.Active = false
             tickFill.AnchorPoint = Vector2.new(0.5, 0.5)
-            tickFill.BackgroundColor3 = chilliColor(255, 255, 255)
+            tickFill.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             tickFill.BorderSizePixel = 0
             tickFill.Position = UDim2.fromScale(0.5, 0.5)
             tickFill.Size = UDim2.fromScale(0, 0)
@@ -3574,7 +3418,7 @@ local function createDropdownRow(
 
         
         
-        local text = chilliNew("TextLabel")
+        local text = Instance.new("TextLabel")
         text.Name = "Label"
         text.Active = false
         
@@ -4041,7 +3885,7 @@ local function createButtonRow(name, labelText, buttonText, confirmText)
     local currentButtonText = tostring(buttonText or "")
     local currentConfirmText = tostring(confirmText or "")
 
-    local button = chilliNew("TextButton")
+    local button = Instance.new("TextButton")
     button.Name = "Action"
     button.Active = true
     button.AutoButtonColor = false
@@ -4055,11 +3899,11 @@ local function createButtonRow(name, labelText, buttonText, confirmText)
     button.Parent = main
     attachScaleFeedback(button, 1.035, 0.96)
 
-    local base = chilliNew("Frame")
+    local base = Instance.new("Frame")
     base.Name = "Main"
     base.Active = false
     base.AnchorPoint = Vector2.new(0.5, 0.5)
-    base.BackgroundColor3 = chilliColor(175, 0, 0)
+    base.BackgroundColor3 = Color3.fromRGB(175, 0, 0)
     base.BorderSizePixel = 0
     base.Position = UDim2.fromScale(0.5, 0.5)
     base.Size = UDim2.fromScale(1, 0.92)
@@ -4067,11 +3911,11 @@ local function createButtonRow(name, labelText, buttonText, confirmText)
     base.Parent = button
     addScaledStroke(base, Enum.ApplyStrokeMode.Border, 0.06)
 
-    local colorFrame = chilliNew("Frame")
+    local colorFrame = Instance.new("Frame")
     colorFrame.Name = "ColorFrame"
     colorFrame.Active = false
     colorFrame.AnchorPoint = Vector2.new(0.5, 0)
-    colorFrame.BackgroundColor3 = chilliColor(255, 255, 255)
+    colorFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     colorFrame.BorderSizePixel = 0
     colorFrame.Position = UDim2.fromScale(0.5, 0)
     colorFrame.Size = UDim2.fromScale(1, 0.9)
@@ -4079,11 +3923,11 @@ local function createButtonRow(name, labelText, buttonText, confirmText)
     colorFrame.Parent = base
     addRedGradient(colorFrame, "RedGradient", rebirthOuterGradient)
 
-    local highlight = chilliNew("Frame")
+    local highlight = Instance.new("Frame")
     highlight.Name = "Transparent"
     highlight.Active = false
     highlight.AnchorPoint = Vector2.new(0.5, 0.5)
-    highlight.BackgroundColor3 = chilliColor(255, 255, 255)
+    highlight.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     highlight.BorderSizePixel = 0
     highlight.Position = UDim2.fromScale(0.5, 0.5)
     highlight.Size = UDim2.fromScale(0.965, 0.88)
@@ -4091,7 +3935,7 @@ local function createButtonRow(name, labelText, buttonText, confirmText)
     highlight.Parent = colorFrame
     addRedGradient(highlight, "RedGradient", rebirthInnerGradient)
 
-    local caption = chilliNew("TextLabel")
+    local caption = Instance.new("TextLabel")
     caption.Name = "Label"
     caption.Active = false
     caption.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -4159,11 +4003,11 @@ end
 local function createInputRow(name, labelText, placeholder)
     local row, main = buildFixedRow(name, labelText)
 
-    local field = chilliNew("Frame")
+    local field = Instance.new("Frame")
     field.Name = "Field"
     field.Active = false
     field.AnchorPoint = Vector2.new(0.5, 0.5)
-    field.BackgroundColor3 = chilliColor(0, 0, 0)
+    field.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     field.BackgroundTransparency = 0.6
     field.BorderSizePixel = 0
     
@@ -4175,18 +4019,18 @@ local function createInputRow(name, labelText, placeholder)
     field.Parent = main
     addScaledStroke(field, Enum.ApplyStrokeMode.Border, 0.1)
 
-    local underline = chilliNew("Frame")
+    local underline = Instance.new("Frame")
     underline.Name = "Underline"
     underline.Active = false
     underline.AnchorPoint = Vector2.new(0.5, 1)
-    underline.BackgroundColor3 = chilliColor(255, 255, 255)
+    underline.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     underline.BorderSizePixel = 0
     underline.Position = UDim2.fromScale(0.5, 1)
     underline.Size = UDim2.fromScale(0, 0.11)
     underline.ZIndex = 6
     underline.Parent = field
 
-    local input = chilliNew("TextBox")
+    local input = Instance.new("TextBox")
     input.Name = "Input"
     input.Active = true
     input.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -4198,7 +4042,7 @@ local function createInputRow(name, labelText, placeholder)
     input.Size = UDim2.fromScale(0.9, 0.56)
     input.Text = ""
     input.PlaceholderText = placeholder
-    input.PlaceholderColor3 = chilliColor(198, 198, 198)
+    input.PlaceholderColor3 = Color3.fromRGB(198, 198, 198)
     input.TextXAlignment = Enum.TextXAlignment.Center
     input.TextYAlignment = Enum.TextYAlignment.Center
     input.ZIndex = 5
@@ -4530,7 +4374,7 @@ local function createLibrarySliderRow(config)
     
     
     local valueColors = {
-        Number = chilliColor(255, 255, 255),
+        Number = Color3.fromRGB(255, 255, 255),
         Prefix = CHEVRON_COLOR,
         Suffix = CHEVRON_COLOR,
     }
@@ -4592,7 +4436,7 @@ local function createLibrarySliderRow(config)
 
     local sliderNote = tostring(config.Note or config.Description or "")
     local noteVScale = ROW_ASPECT_WITH_NOTE / ROW_ASPECT
-    local noteLabel = chilliNew("TextLabel")
+    local noteLabel = Instance.new("TextLabel")
     noteLabel.Name = "Note"
     noteLabel.Active = false
     noteLabel.AnchorPoint = Vector2.new(0, 0.5)
@@ -4617,11 +4461,11 @@ local function createLibrarySliderRow(config)
         end
     end
 
-    local valueLabel = chilliNew("TextBox")
+    local valueLabel = Instance.new("TextBox")
     valueLabel.Name = "Value"
     valueLabel.Active = true
     valueLabel.AnchorPoint = Vector2.new(0, 0.5)
-    valueLabel.BackgroundColor3 = chilliColor(0, 0, 0)
+    valueLabel.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     valueLabel.BackgroundTransparency = 0.6
     valueLabel.BorderSizePixel = 0
     valueLabel.ClearTextOnFocus = false
@@ -4651,11 +4495,11 @@ local function createLibrarySliderRow(config)
     valuePadding.PaddingBottom = UDim.new(0, 0)
     valuePadding.Parent = valueLabel
 
-    local track = chilliNew("Frame")
+    local track = Instance.new("Frame")
     track.Name = "Slider"
     track.Active = true
     track.AnchorPoint = Vector2.new(0.5, 0.5)
-    track.BackgroundColor3 = chilliColor(0, 0, 0)
+    track.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     track.BackgroundTransparency = 0.6
     track.BorderSizePixel = 0
     track.ClipsDescendants = false
@@ -4665,11 +4509,11 @@ local function createLibrarySliderRow(config)
     track.Parent = main
     addScaledStroke(track, Enum.ApplyStrokeMode.Border, 0.1)
 
-    local bar = chilliNew("Frame")
+    local bar = Instance.new("Frame")
     bar.Name = "Bar"
     bar.Active = true
     bar.AnchorPoint = Vector2.new(0, 0.5)
-    bar.BackgroundColor3 = chilliColor(255, 255, 255)
+    bar.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     bar.BorderSizePixel = 0
     bar.Position = UDim2.fromScale(0, 0.5)
     bar.Size = UDim2.fromScale(0.5, 1)
@@ -4677,11 +4521,11 @@ local function createLibrarySliderRow(config)
     bar.Parent = track
     addAccentGradient(bar)
 
-    local hold = chilliNew("Frame")
+    local hold = Instance.new("Frame")
     hold.Name = "Hold"
     hold.Active = true
     hold.AnchorPoint = Vector2.new(0.5, 0.5)
-    hold.BackgroundColor3 = chilliColor(89, 89, 89)
+    hold.BackgroundColor3 = Color3.fromRGB(89, 89, 89)
     hold.BackgroundTransparency = 1
     hold.BorderSizePixel = 0
     hold.ClipsDescendants = false
@@ -4695,13 +4539,13 @@ local function createLibrarySliderRow(config)
         Enum.ApplyStrokeMode.Border,
         0.09
     )
-    holdStroke.Color = chilliColor(39, 39, 39)
+    holdStroke.Color = Color3.fromRGB(39, 39, 39)
 
-    local holdColor = chilliNew("Frame")
+    local holdColor = Instance.new("Frame")
     holdColor.Name = "Color"
     holdColor.Active = false
     holdColor.AnchorPoint = Vector2.new(0.5, 0)
-    holdColor.BackgroundColor3 = chilliColor(255, 255, 255)
+    holdColor.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     holdColor.BorderSizePixel = 0
     holdColor.Position = UDim2.fromScale(0.5, 0)
     holdColor.Size = UDim2.fromScale(1, 1)
@@ -4714,11 +4558,11 @@ local function createLibrarySliderRow(config)
     
     
     
-    local unitDivider = chilliNew("Frame")
+    local unitDivider = Instance.new("Frame")
     unitDivider.Name = "UnitDivider"
     unitDivider.Active = false
     unitDivider.AnchorPoint = Vector2.new(0.5, 0.5)
-    unitDivider.BackgroundColor3 = chilliColor(0, 0, 0)
+    unitDivider.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
     unitDivider.BackgroundTransparency = 0.3
     unitDivider.BorderSizePixel = 0
     unitDivider.Position = UDim2.fromScale(0.5935, 0.5)
@@ -4727,7 +4571,7 @@ local function createLibrarySliderRow(config)
     unitDivider.ZIndex = 7
     unitDivider.Parent = main
 
-    local unitButton = chilliNew("TextButton")
+    local unitButton = Instance.new("TextButton")
     unitButton.Name = "UnitSelector"
     unitButton.Active = true
     unitButton.AutoButtonColor = false
@@ -4746,7 +4590,7 @@ local function createLibrarySliderRow(config)
     unitScale.Scale = 1
     unitScale.Parent = unitButton
 
-    local unitCaret = chilliNew("Frame")
+    local unitCaret = Instance.new("Frame")
     unitCaret.Name = "Caret"
     unitCaret.Active = false
     unitCaret.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -4764,7 +4608,7 @@ local function createLibrarySliderRow(config)
     unitCaretAspect.Parent = unitCaret
 
     for _, arm in ipairs({ { 0.335355, 45 }, { 0.664645, -45 } }) do
-        local piece = chilliNew("Frame")
+        local piece = Instance.new("Frame")
         piece.Name = "Arm"
         piece.Active = false
         piece.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -5021,7 +4865,7 @@ local function createLibrarySliderRow(config)
         if unitOverlay then
             return
         end
-        unitOverlay = chilliNew("TextButton")
+        unitOverlay = Instance.new("TextButton")
         unitOverlay.Name = "UnitMenuOverlay"
         unitOverlay.Active = true
         unitOverlay.AutoButtonColor = false
@@ -5038,7 +4882,7 @@ local function createLibrarySliderRow(config)
             closeUnitMenu()
         end)
 
-        unitMenu = chilliNew("Frame")
+        unitMenu = Instance.new("Frame")
         unitMenu.Name = "UnitMenu"
         unitMenu.Active = true
         
@@ -5084,11 +4928,11 @@ local function createLibrarySliderRow(config)
             end
         end
         for index, unit in ipairs(unitOptions) do
-            local item = chilliNew("TextButton")
+            local item = Instance.new("TextButton")
             item.Name = "Unit" .. index
             item.Active = true
             item.AutoButtonColor = false
-            item.BackgroundColor3 = chilliColor(0, 0, 0)
+            item.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
             item.BackgroundTransparency = 0.35
             item.BorderSizePixel = 0
             item.LayoutOrder = index
@@ -5743,11 +5587,11 @@ local function createLibraryToggleRow(config)
     local row, main, label = buildFixedRow(config.Name, config.Name)
     label.Size = UDim2.fromScale(0.72, 0.64)
 
-    local switch = chilliNew("Frame")
+    local switch = Instance.new("Frame")
     switch.Name = "Switch"
     switch.Active = false
     switch.AnchorPoint = Vector2.new(0.5, 0.5)
-    switch.BackgroundColor3 = chilliColor(255, 255, 255)
+    switch.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     switch.BorderSizePixel = 0
     switch.Position = UDim2.fromScale(0.915, 0.5)
     switch.Size = UDim2.fromScale(0.142, 0.75)
@@ -5757,7 +5601,7 @@ local function createLibraryToggleRow(config)
 
     local offGradient = Instance.new("UIGradient")
     offGradient.Name = "OFF"
-    offGradient.Color = ColorSequence.new(chilliColor(0, 0, 0))
+    offGradient.Color = ColorSequence.new(Color3.fromRGB(0, 0, 0))
     offGradient.Rotation = 90
     offGradient.Transparency = NumberSequence.new(0.6)
     offGradient.Parent = switch
@@ -5768,11 +5612,11 @@ local function createLibraryToggleRow(config)
     onGradient.Rotation = 90
     onGradient.Parent = switch
 
-    local knob = chilliNew("Frame")
+    local knob = Instance.new("Frame")
     knob.Name = "Hold"
     knob.Active = false
     knob.AnchorPoint = Vector2.new(0.5, 0.5)
-    knob.BackgroundColor3 = chilliColor(89, 89, 89)
+    knob.BackgroundColor3 = Color3.fromRGB(89, 89, 89)
     knob.BorderSizePixel = 0
     knob.Size = UDim2.fromScale(0.72, 0.72)
     knob.ZIndex = 5
@@ -5785,18 +5629,18 @@ local function createLibraryToggleRow(config)
     knobAspect.DominantAxis = Enum.DominantAxis.Width
     knobAspect.Parent = knob
 
-    local knobColor = chilliNew("Frame")
+    local knobColor = Instance.new("Frame")
     knobColor.Name = "Color"
     knobColor.Active = false
     knobColor.AnchorPoint = Vector2.new(0.5, 0)
-    knobColor.BackgroundColor3 = chilliColor(255, 255, 255)
+    knobColor.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     knobColor.BorderSizePixel = 0
     knobColor.Position = UDim2.fromScale(0.5, 0)
     knobColor.Size = UDim2.fromScale(1, 0.9)
     knobColor.ZIndex = 6
     knobColor.Parent = knob
 
-    local button = chilliNew("TextButton")
+    local button = Instance.new("TextButton")
     button.Name = "Button"
     button.Active = true
     button.AutoButtonColor = false
@@ -5858,7 +5702,7 @@ local function createLibraryTextRow(config)
     label.Size = UDim2.fromScale(0.94, 0.64)
     label.TextXAlignment = config.Alignment or Enum.TextXAlignment.Left
 
-    local note = chilliNew("TextLabel")
+    local note = Instance.new("TextLabel")
     note.Name = "Note"
     note.Active = false
     note.AnchorPoint = Vector2.new(0, 0.5)
@@ -5973,7 +5817,7 @@ local function addNoteToButtonRow(row, config, button)
         0.64 * vScale * NOTE_TITLE_SCALE
     )
 
-    local note = chilliNew("TextLabel")
+    local note = Instance.new("TextLabel")
     note.Name = "Note"
     note.Active = false
     note.AnchorPoint = Vector2.new(0, 0.5)
@@ -6064,7 +5908,7 @@ local function createLibraryInputRow(config)
     local fieldLeft = CONTROL_LAYOUT.WideCenterX - CONTROL_LAYOUT.WideWidth / 2
     local currentNote = ""
 
-    local noteLabel = chilliNew("TextLabel")
+    local noteLabel = Instance.new("TextLabel")
     noteLabel.Name = "Note"
     noteLabel.Active = false
     noteLabel.AnchorPoint = Vector2.new(0, 0.5)
@@ -6155,7 +5999,7 @@ local function createLibraryNoteToggleRow(config)
         0.64 * vScale * NOTE_TITLE_SCALE
     )
 
-    local note = chilliNew("TextLabel")
+    local note = Instance.new("TextLabel")
     note.Name = "Note"
     note.Active = false
     note.AnchorPoint = Vector2.new(0, 0.5)
@@ -6269,7 +6113,7 @@ local function createLibraryDropdownRow(config, forceMulti, actionMode)
     
     
     
-    local row = chilliNew("Frame")
+    local row = Instance.new("Frame")
     row.Name = config.Name
     row.Active = false
     row.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -6472,7 +6316,7 @@ sideButtonPadding.Parent = sideButtons
 local TabColumns = {}
 do
     local function buildColumn(name, anchorX, edgeX)
-        local frame = chilliNew("Frame")
+        local frame = Instance.new("Frame")
         frame.Name = name
         frame.Active = false
         frame.AnchorPoint = Vector2.new(anchorX, 0.5)
@@ -6549,7 +6393,7 @@ end)
 
 
 local function createSectionHeader(title, layoutOrder, clipViewport)
-    local header = chilliNew("TextLabel")
+    local header = Instance.new("TextLabel")
     header.Name = title
     header.Active = false
     header.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -6570,7 +6414,7 @@ local function createSectionHeader(title, layoutOrder, clipViewport)
 
     
     
-    local arrowClip = chilliNew("Frame")
+    local arrowClip = Instance.new("Frame")
     arrowClip.Name = "ArrowClip"
     arrowClip.Active = false
     arrowClip.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -6582,7 +6426,7 @@ local function createSectionHeader(title, layoutOrder, clipViewport)
     arrowClip.ZIndex = header.ZIndex + 2
     arrowClip.Parent = header
 
-    local arrow = chilliNew("Frame")
+    local arrow = Instance.new("Frame")
     arrow.Name = "Arrow"
     arrow.Active = false
     arrow.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -6611,11 +6455,11 @@ local function createSectionHeader(title, layoutOrder, clipViewport)
                 -45,
             },
         }) do
-            local piece = chilliNew("Frame")
+            local piece = Instance.new("Frame")
             piece.Name = "Arm"
             piece.Active = false
             piece.AnchorPoint = Vector2.new(0.5, 0.5)
-            piece.BackgroundColor3 = chilliColor(255, 255, 255)
+            piece.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             piece.BorderSizePixel = 0
             piece.Position = UDim2.fromScale(arm[1], armCenterY)
             piece.Rotation = arm[2]
@@ -6711,7 +6555,7 @@ local function createSectionHeader(title, layoutOrder, clipViewport)
     task.defer(layoutArrow)
     task.defer(updateArrowVisibility)
 
-    local button = chilliNew("TextButton")
+    local button = Instance.new("TextButton")
     button.Name = "SectionButton"
     button.Active = true
     button.AutoButtonColor = false
@@ -7729,7 +7573,7 @@ ApiImpl[43] = function(self)
         return row
     end
 
-    local host = chilliNew("Frame")
+    local host = Instance.new("Frame")
     host.Name = row.Name .. "CollapsibleContent"
     host.Active = false
     host.BackgroundTransparency = 1
@@ -8488,24 +8332,24 @@ optionFactories[10] = (function()
         Padding = 1,
         Alignment = "Left",
         BackgroundTransparency = 0.5,
-        TextColor = chilliColor(235, 235, 235),
+        TextColor = Color3.fromRGB(235, 235, 235),
         TextStrokeTransparency = 0.7,
-        GroupColor = chilliColor(58, 255, 55),
+        GroupColor = Color3.fromRGB(58, 255, 55),
         GroupSpacing = true,
         MaxLines = 0,
         ImageLines = 2.3,
         ItemSpacing = 0.35,
         SpotlightLines = 5,
-        SpotlightBackgroundColor = chilliColor(0, 0, 0),
+        SpotlightBackgroundColor = Color3.fromRGB(0, 0, 0),
         SpotlightBackgroundTransparency = 1,
         SpotlightModelScale = 1,
         SpotlightDividerColor = false,
-        ScrollBarColor = chilliColor(255, 255, 255),
-        ItemBackgroundColor = chilliColor(255, 255, 255),
+        ScrollBarColor = Color3.fromRGB(255, 255, 255),
+        ItemBackgroundColor = Color3.fromRGB(255, 255, 255),
         ItemBackgroundTransparency = 1,
-        SelectedBackgroundColor = chilliColor(58, 255, 55),
+        SelectedBackgroundColor = Color3.fromRGB(58, 255, 55),
         SelectedBackgroundTransparency = 0.86,
-        HoverBackgroundColor = chilliColor(255, 255, 255),
+        HoverBackgroundColor = Color3.fromRGB(255, 255, 255),
         HoverBackgroundTransparency = 0.93,
         TitlePartSpacing = 0.34,
     }
@@ -8515,9 +8359,9 @@ optionFactories[10] = (function()
     local SPIN_SPEED = math.rad(28)
     local VISIBILITY_CHECK = 0.5
 
-    local SELECTED_COLOR = chilliColor(58, 255, 55)
-    local HOVER_COLOR = chilliColor(255, 255, 255)
-    local DEFAULT_IMAGE_COLOR = chilliColor(90, 90, 110)
+    local SELECTED_COLOR = Color3.fromRGB(58, 255, 55)
+    local HOVER_COLOR = Color3.fromRGB(255, 255, 255)
+    local DEFAULT_IMAGE_COLOR = Color3.fromRGB(90, 90, 110)
 
     local FONTS = {
         ["gotham"] = normalTextFont,
@@ -8755,7 +8599,7 @@ optionFactories[10] = (function()
         local stroke = Instance.new("UIStroke")
         stroke.Name = "TextOutline"
         stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Contextual
-        stroke.Color = chilliColor(0, 0, 0)
+        stroke.Color = Color3.fromRGB(0, 0, 0)
         stroke.LineJoinMode = Enum.LineJoinMode.Round
         pcall(function()
             stroke.StrokeSizingMode = Enum.StrokeSizingMode.FixedSize
@@ -8853,11 +8697,11 @@ optionFactories[10] = (function()
             return ROW_WIDTH_SCALE
         end
 
-        local searchField = chilliNew("Frame")
+        local searchField = Instance.new("Frame")
         searchField.Name = "SearchField"
         searchField.Active = false
         searchField.AnchorPoint = Vector2.new(0.5, 0.5)
-        searchField.BackgroundColor3 = chilliColor(0, 0, 0)
+        searchField.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         searchField.BackgroundTransparency = 0.6
         searchField.BorderSizePixel = 0
         searchField.Visible = false
@@ -8865,18 +8709,18 @@ optionFactories[10] = (function()
         searchField.Parent = main
         addScaledStroke(searchField, Enum.ApplyStrokeMode.Border, 0.1)
 
-        local searchUnderline = chilliNew("Frame")
+        local searchUnderline = Instance.new("Frame")
         searchUnderline.Name = "Underline"
         searchUnderline.Active = false
         searchUnderline.AnchorPoint = Vector2.new(0.5, 1)
-        searchUnderline.BackgroundColor3 = chilliColor(255, 255, 255)
+        searchUnderline.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         searchUnderline.BorderSizePixel = 0
         searchUnderline.Position = UDim2.fromScale(0.5, 1)
         searchUnderline.Size = UDim2.fromScale(0, 0.11)
         searchUnderline.ZIndex = 6
         searchUnderline.Parent = searchField
 
-        local searchBox = chilliNew("TextBox")
+        local searchBox = Instance.new("TextBox")
         searchBox.Name = "SearchInput"
         searchBox.Active = true
         searchBox.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -8888,7 +8732,7 @@ optionFactories[10] = (function()
         searchBox.Size = UDim2.fromScale(0.9, 0.56)
         searchBox.Text = ""
         searchBox.PlaceholderText = content.SearchPlaceholder
-        searchBox.PlaceholderColor3 = chilliColor(198, 198, 198)
+        searchBox.PlaceholderColor3 = Color3.fromRGB(198, 198, 198)
         searchBox.TextXAlignment = Enum.TextXAlignment.Center
         searchBox.TextYAlignment = Enum.TextYAlignment.Center
         searchBox.ZIndex = 5
@@ -8906,7 +8750,7 @@ optionFactories[10] = (function()
             ):Play()
         end
 
-        local spotFrame = chilliNew("Frame")
+        local spotFrame = Instance.new("Frame")
         spotFrame.Name = "Spotlight"
         spotFrame.Active = false
         spotFrame.BackgroundTransparency = 1
@@ -8917,11 +8761,11 @@ optionFactories[10] = (function()
 
         local spotView = Instance.new("ViewportFrame")
         spotView.Name = "Model"
-        spotView.Ambient = chilliColor(170, 170, 180)
-        spotView.BackgroundColor3 = chilliColor(0, 0, 0)
+        spotView.Ambient = Color3.fromRGB(170, 170, 180)
+        spotView.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         spotView.BackgroundTransparency = 1
         spotView.BorderSizePixel = 0
-        spotView.LightColor = chilliColor(255, 255, 255)
+        spotView.LightColor = Color3.fromRGB(255, 255, 255)
         spotView.LightDirection = Vector3.new(-0.6, -1, -0.4)
         spotView.ZIndex = 6
         spotView.Parent = spotFrame
@@ -8931,7 +8775,7 @@ optionFactories[10] = (function()
         spotCamera.Parent = spotView
         spotView.CurrentCamera = spotCamera
 
-        local spotText = chilliNew("TextLabel")
+        local spotText = Instance.new("TextLabel")
         spotText.Name = "Info"
         spotText.Active = false
         spotText.BackgroundTransparency = 1
@@ -8939,21 +8783,21 @@ optionFactories[10] = (function()
         spotText.RichText = true
         spotText.Text = ""
         spotText.TextScaled = false
-        spotText.TextStrokeColor3 = chilliColor(0, 0, 0)
+        spotText.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
         spotText.TextWrapped = true
         spotText.TextXAlignment = Enum.TextXAlignment.Left
         spotText.TextYAlignment = Enum.TextYAlignment.Center
         spotText.ZIndex = 6
         spotText.Parent = spotFrame
 
-        local spotTitle = chilliNew("TextLabel")
+        local spotTitle = Instance.new("TextLabel")
         spotTitle.Name = "SpotlightTitle"
         spotTitle.Active = false
         spotTitle.BackgroundTransparency = 1
         spotTitle.BorderSizePixel = 0
         spotTitle.FontFace = normalTextFont
         spotTitle.Text = ""
-        spotTitle.TextColor3 = chilliColor(255, 255, 255)
+        spotTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
         spotTitle.TextScaled = false
         spotTitle.TextStrokeTransparency = 1
         spotTitle.TextWrapped = false
@@ -8967,24 +8811,24 @@ optionFactories[10] = (function()
             { Label = spotTitle, Stroke = spotTitleStroke, GradientSource = nil, Spec = nil },
         }
 
-        local spotDivider = chilliNew("Frame")
+        local spotDivider = Instance.new("Frame")
         spotDivider.Name = "SpotlightDivider"
         spotDivider.Active = false
-        spotDivider.BackgroundColor3 = chilliColor(255, 255, 255)
+        spotDivider.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         spotDivider.BackgroundTransparency = 0.45
         spotDivider.BorderSizePixel = 0
         spotDivider.Visible = false
         spotDivider.ZIndex = 6
         spotDivider.Parent = main
 
-        local viewport = chilliNew("ScrollingFrame")
+        local viewport = Instance.new("ScrollingFrame")
         viewport.Name = "BodyViewport"
         viewport.Active = true
         viewport.BackgroundTransparency = 1
         viewport.BorderSizePixel = 0
         viewport.CanvasSize = UDim2.new()
         viewport.ElasticBehavior = Enum.ElasticBehavior.Never
-        viewport.ScrollBarImageColor3 = chilliColor(255, 255, 255)
+        viewport.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
         viewport.ScrollBarImageTransparency = 0
         viewport.ScrollingDirection = Enum.ScrollingDirection.Y
         viewport.ZIndex = 5
@@ -9003,14 +8847,14 @@ optionFactories[10] = (function()
         local specs = {}
 
         local function createTitlePart(parent, zIndex)
-            local label = chilliNew("TextLabel")
+            local label = Instance.new("TextLabel")
             label.Name = "TitlePart"
             label.Active = false
             label.BackgroundTransparency = 1
             label.BorderSizePixel = 0
             label.FontFace = normalTextFont
             label.Text = ""
-            label.TextColor3 = chilliColor(255, 255, 255)
+            label.TextColor3 = Color3.fromRGB(255, 255, 255)
             label.TextScaled = false
             label.TextStrokeTransparency = 1
             label.TextTruncate = Enum.TextTruncate.AtEnd
@@ -9083,12 +8927,12 @@ optionFactories[10] = (function()
                     local partSize = math.max(8, math.floor(baseSize * math.max(0.3, tonumber(part.Scale) or 1) + 0.5))
                     label.FontFace = resolveFont(part.Font or defaultFont)
                     label.TextSize = partSize
-                    label.TextColor3 = toColor3(part.Color, chilliColor(255, 255, 255))
+                    label.TextColor3 = toColor3(part.Color, Color3.fromRGB(255, 255, 255))
                     -- TextBounds is zero while a fresh unwrapped label still has
                     -- zero width. Give it the available box before measuring.
                     label.Size = UDim2.fromOffset(math.max(1, width), math.max(1, height))
                     local stroke = titlePart.Stroke
-                    stroke.Color = toColor3(part.StrokeColor, chilliColor(0, 0, 0))
+                    stroke.Color = toColor3(part.StrokeColor, Color3.fromRGB(0, 0, 0))
                     stroke.Transparency = math.clamp(tonumber(part.StrokeTransparency) or 0, 0, 1)
                     stroke.Thickness = math.max(0.5, tonumber(part.StrokeThickness) or math.max(1, partSize * 0.1))
                     local measuredWidth = label.TextBounds.X
@@ -9171,7 +9015,7 @@ optionFactories[10] = (function()
         end
 
         local function newRow()
-            local frame = chilliNew("Frame")
+            local frame = Instance.new("Frame")
             frame.Name = "Entry"
             frame.Active = false
             frame.BackgroundColor3 = HOVER_COLOR
@@ -9181,9 +9025,9 @@ optionFactories[10] = (function()
             frame.Parent = viewport
             local corner = makeCorner(frame)
 
-            local image = chilliNew("ImageLabel")
+            local image = Instance.new("ImageLabel")
             image.Name = "Icon"
-            image.BackgroundColor3 = chilliColor(0, 0, 0)
+            image.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
             image.BackgroundTransparency = 0.45
             image.BorderSizePixel = 0
             image.ScaleType = Enum.ScaleType.Fit
@@ -9193,7 +9037,7 @@ optionFactories[10] = (function()
             local imageCorner = makeCorner(image)
             local imageStroke = makeFixedStroke(image, DEFAULT_IMAGE_COLOR)
 
-            local label = chilliNew("TextLabel")
+            local label = Instance.new("TextLabel")
             label.Name = "Text"
             label.Active = false
             label.BackgroundTransparency = 1
@@ -9201,20 +9045,20 @@ optionFactories[10] = (function()
             label.RichText = true
             label.Text = ""
             label.TextScaled = false
-            label.TextStrokeColor3 = chilliColor(0, 0, 0)
+            label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
             label.TextWrapped = true
             label.TextYAlignment = Enum.TextYAlignment.Top
             label.ZIndex = 7
             label.Parent = frame
 
-            local titleLabel = chilliNew("TextLabel")
+            local titleLabel = Instance.new("TextLabel")
             titleLabel.Name = "Title"
             titleLabel.Active = false
             titleLabel.BackgroundTransparency = 1
             titleLabel.BorderSizePixel = 0
             titleLabel.FontFace = normalTextFont
             titleLabel.Text = ""
-            titleLabel.TextColor3 = chilliColor(255, 255, 255)
+            titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
             titleLabel.TextScaled = false
             titleLabel.TextStrokeTransparency = 1
             titleLabel.TextWrapped = false
@@ -9224,7 +9068,7 @@ optionFactories[10] = (function()
             titleLabel.Parent = frame
             local titleStroke = makeTextStroke(titleLabel)
 
-            local topRightLabel = chilliNew("TextLabel")
+            local topRightLabel = Instance.new("TextLabel")
             topRightLabel.Name = "TopRightText"
             topRightLabel.Active = false
             topRightLabel.BackgroundTransparency = 1
@@ -9232,7 +9076,7 @@ optionFactories[10] = (function()
             topRightLabel.RichText = true
             topRightLabel.Text = ""
             topRightLabel.TextScaled = false
-            topRightLabel.TextStrokeColor3 = chilliColor(0, 0, 0)
+            topRightLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
             topRightLabel.TextWrapped = false
             topRightLabel.TextXAlignment = Enum.TextXAlignment.Right
             topRightLabel.TextYAlignment = Enum.TextYAlignment.Center
@@ -9240,7 +9084,7 @@ optionFactories[10] = (function()
             topRightLabel.ZIndex = 7
             topRightLabel.Parent = frame
 
-            local button = chilliNew("TextButton")
+            local button = Instance.new("TextButton")
             button.Name = "Hit"
             button.AutoButtonColor = false
             button.BackgroundTransparency = 1
@@ -9504,7 +9348,7 @@ optionFactories[10] = (function()
             spotTitle.Visible = hasTitleParts
             spotDivider.BackgroundColor3 = typeof(style.SpotlightDividerColor) == "Color3"
                 and style.SpotlightDividerColor
-                or toColor3(spot.Color, chilliColor(255, 255, 255))
+                or toColor3(spot.Color, Color3.fromRGB(255, 255, 255))
 
             if spot.Model ~= spotTemplate then
                 spotTemplate = spot.Model
@@ -9585,13 +9429,13 @@ optionFactories[10] = (function()
                 plateStroke.Thickness = math.max(1, bandHeight * 0.05)
             end
             main.BackgroundTransparency = math.clamp(tonumber(style.BackgroundTransparency) or 0.5, 0, 1)
-            spotView.BackgroundColor3 = toColor3(style.SpotlightBackgroundColor, chilliColor(0, 0, 0))
+            spotView.BackgroundColor3 = toColor3(style.SpotlightBackgroundColor, Color3.fromRGB(0, 0, 0))
             spotView.BackgroundTransparency = math.clamp(
                 tonumber(style.SpotlightBackgroundTransparency) or 1,
                 0,
                 1
             )
-            viewport.ScrollBarImageColor3 = toColor3(style.ScrollBarColor, chilliColor(255, 255, 255))
+            viewport.ScrollBarImageColor3 = toColor3(style.ScrollBarColor, Color3.fromRGB(255, 255, 255))
 
             local fieldWidth = rowWidth * CONTROL_LAYOUT.WideWidth
             local fieldCenterX = rowWidth * CONTROL_LAYOUT.WideCenterX
@@ -10006,15 +9850,15 @@ optionFactories[11] = (function()
         LineHeight = 1.16,
         Padding = 1,
         Alignment = "Left",
-        BackgroundColor = chilliColor(0, 0, 0),
+        BackgroundColor = Color3.fromRGB(0, 0, 0),
         BackgroundTransparency = 0.5,
-        StrokeColor = chilliColor(0, 0, 0),
+        StrokeColor = Color3.fromRGB(0, 0, 0),
         StrokeTransparency = 0,
         StrokeScale = 0.05,
         CornerScale = 0.35,
-        ScrollBarColor = chilliColor(255, 255, 255),
+        ScrollBarColor = Color3.fromRGB(255, 255, 255),
         ScrollBarTransparency = 0,
-        TextColor = chilliColor(235, 235, 235),
+        TextColor = Color3.fromRGB(235, 235, 235),
         TextStrokeTransparency = 0.7,
         MinLines = 4,
         MaxLines = 0,
@@ -10171,7 +10015,7 @@ optionFactories[11] = (function()
             stroke.Parent = target
         end
         stroke.ApplyStrokeMode = mode or Enum.ApplyStrokeMode.Contextual
-        stroke.Color = color or chilliColor(0, 0, 0)
+        stroke.Color = color or Color3.fromRGB(0, 0, 0)
         stroke.Thickness = math.max(0.01, thickness)
         stroke.Transparency = math.clamp(canvasNumber(transparency, 0), 0, 1)
         return stroke
@@ -10355,7 +10199,7 @@ optionFactories[11] = (function()
     local function canvasCreateFrame(surface, spec)
         local frame = Instance.new(spec.Scrolling == true and "ScrollingFrame" or "Frame")
         frame.Name = tostring(spec.Name or "Panel")
-        frame.BackgroundColor3 = canvasColor(spec.Background, chilliColor(0, 0, 0))
+        frame.BackgroundColor3 = canvasColor(spec.Background, Color3.fromRGB(0, 0, 0))
         frame.BackgroundTransparency = math.clamp(canvasNumber(spec.BackgroundTransparency, 1), 0, 1)
         frame.BorderSizePixel = 0
         frame.ZIndex = tonumber(spec.ZIndex) or 6
@@ -10384,7 +10228,7 @@ optionFactories[11] = (function()
             if spec.StrokeColor ~= nil or spec.StrokeThickness ~= nil then
                 canvasStroke(
                     frame,
-                    canvasColor(spec.StrokeColor, chilliColor(0, 0, 0)),
+                    canvasColor(spec.StrokeColor, Color3.fromRGB(0, 0, 0)),
                     canvasNumber(spec.StrokeThickness, 0.06) * surface._metrics.Unit,
                     spec.StrokeTransparency,
                     Enum.ApplyStrokeMode.Border
@@ -10408,7 +10252,7 @@ optionFactories[11] = (function()
     end
 
     local function canvasCreateText(surface, spec)
-        local label = chilliNew("TextLabel")
+        local label = Instance.new("TextLabel")
         label.Name = tostring(spec.Name or "Text")
         label.Active = false
         label.BackgroundTransparency = 1
@@ -10416,7 +10260,7 @@ optionFactories[11] = (function()
         label.RichText = spec.Rich ~= false
         label.Text = ""
         label.TextScaled = false
-        label.TextStrokeColor3 = chilliColor(0, 0, 0)
+        label.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
         label.TextStrokeTransparency = 1
         label.TextWrapped = spec.Wrap ~= false
         label.TextYAlignment = Enum.TextYAlignment.Top
@@ -10434,7 +10278,7 @@ optionFactories[11] = (function()
             label.LineHeight = canvasNumber(spec.LineHeight, metrics.LineHeight)
             label.TextColor3 = canvasColor(spec.Color, style.TextColor)
             label.TextTransparency = math.clamp(canvasNumber(spec.Transparency, 0), 0, 1)
-            label.TextStrokeColor3 = canvasColor(spec.TextStrokeColor, chilliColor(0, 0, 0))
+            label.TextStrokeColor3 = canvasColor(spec.TextStrokeColor, Color3.fromRGB(0, 0, 0))
             label.TextStrokeTransparency = math.clamp(
                 canvasNumber(spec.TextStrokeTransparency, style.TextStrokeTransparency),
                 0,
@@ -10448,7 +10292,7 @@ optionFactories[11] = (function()
             if spec.StrokeThickness ~= nil or spec.StrokeColor ~= nil then
                 canvasStroke(
                     label,
-                    canvasColor(spec.StrokeColor, chilliColor(0, 0, 0)),
+                    canvasColor(spec.StrokeColor, Color3.fromRGB(0, 0, 0)),
                     canvasNumber(spec.StrokeThickness, 0.1) * label.TextSize,
                     spec.StrokeTransparency,
                     Enum.ApplyStrokeMode.Contextual
@@ -10465,10 +10309,10 @@ optionFactories[11] = (function()
     end
 
     local function canvasCreateButton(surface, spec)
-        local button = chilliNew("TextButton")
+        local button = Instance.new("TextButton")
         button.Name = tostring(spec.Name or "Button")
         button.AutoButtonColor = false
-        button.BackgroundColor3 = canvasColor(spec.Background, chilliColor(0, 0, 0))
+        button.BackgroundColor3 = canvasColor(spec.Background, Color3.fromRGB(0, 0, 0))
         button.BackgroundTransparency = math.clamp(canvasNumber(spec.BackgroundTransparency, 0.35), 0, 1)
         button.BorderSizePixel = 0
         button.RichText = spec.Rich ~= false
@@ -10500,13 +10344,13 @@ optionFactories[11] = (function()
             button.RichText = spec.Rich ~= false
             button.FontFace = canvasFont(spec.Font) or metrics.Font
             button.TextSize = math.max(6, math.floor(metrics.TextSize * canvasNumber(spec.Scale, 1) + 0.5))
-            button.TextColor3 = canvasColor(spec.Color, chilliColor(255, 255, 255))
+            button.TextColor3 = canvasColor(spec.Color, Color3.fromRGB(255, 255, 255))
             button.TextXAlignment = CANVAS_ALIGN[string.lower(tostring(spec.Align or "center"))]
                 or Enum.TextXAlignment.Center
             canvasGradient(button, spec.Gradient, spec.GradientRotation)
             canvasStroke(
                 button,
-                canvasColor(spec.StrokeColor, chilliColor(0, 0, 0)),
+                canvasColor(spec.StrokeColor, Color3.fromRGB(0, 0, 0)),
                 canvasNumber(spec.StrokeThickness, 0.05) * metrics.Unit,
                 spec.StrokeTransparency,
                 Enum.ApplyStrokeMode.Border
@@ -10567,10 +10411,10 @@ optionFactories[11] = (function()
     end
 
     local function canvasCreateImage(surface, spec)
-        local image = chilliNew("ImageLabel")
+        local image = Instance.new("ImageLabel")
         image.Name = tostring(spec.Name or "Image")
         image.Active = false
-        image.BackgroundColor3 = canvasColor(spec.Background, chilliColor(0, 0, 0))
+        image.BackgroundColor3 = canvasColor(spec.Background, Color3.fromRGB(0, 0, 0))
         image.BackgroundTransparency = math.clamp(canvasNumber(spec.BackgroundTransparency, 1), 0, 1)
         image.BorderSizePixel = 0
         image.ScaleType = Enum.ScaleType.Fit
@@ -10580,7 +10424,7 @@ optionFactories[11] = (function()
         local handle = canvasMakeHandle(surface, image, "Image", spec, function()
             local metrics = surface._metrics
             image.Image = tostring(spec.Image or "")
-            image.ImageColor3 = canvasColor(spec.ImageColor, chilliColor(255, 255, 255))
+            image.ImageColor3 = canvasColor(spec.ImageColor, Color3.fromRGB(255, 255, 255))
             image.ImageTransparency = math.clamp(canvasNumber(spec.Transparency, 0), 0, 1)
             if spec.ScaleType ~= nil then
                 local mode = string.lower(tostring(spec.ScaleType))
@@ -10595,7 +10439,7 @@ optionFactories[11] = (function()
             if spec.StrokeColor ~= nil or spec.StrokeThickness ~= nil then
                 canvasStroke(
                     image,
-                    canvasColor(spec.StrokeColor, chilliColor(255, 255, 255)),
+                    canvasColor(spec.StrokeColor, Color3.fromRGB(255, 255, 255)),
                     canvasNumber(spec.StrokeThickness, 0.08) * metrics.Unit,
                     spec.StrokeTransparency,
                     Enum.ApplyStrokeMode.Border
@@ -10614,18 +10458,18 @@ optionFactories[11] = (function()
     end
 
     local function canvasCreateBar(surface, spec)
-        local track = chilliNew("Frame")
+        local track = Instance.new("Frame")
         track.Name = tostring(spec.Name or "Bar")
-        track.BackgroundColor3 = canvasColor(spec.Background, chilliColor(40, 40, 55))
+        track.BackgroundColor3 = canvasColor(spec.Background, Color3.fromRGB(40, 40, 55))
         track.BackgroundTransparency = math.clamp(canvasNumber(spec.BackgroundTransparency, 0.25), 0, 1)
         track.BorderSizePixel = 0
         track.ClipsDescendants = true
         track.ZIndex = tonumber(spec.ZIndex) or 7
         canvasQueueParent(surface, track, canvasParentOf(surface, spec.Parent))
 
-        local fill = chilliNew("Frame")
+        local fill = Instance.new("Frame")
         fill.Name = "Fill"
-        fill.BackgroundColor3 = canvasColor(spec.FillColor, chilliColor(58, 255, 55))
+        fill.BackgroundColor3 = canvasColor(spec.FillColor, Color3.fromRGB(58, 255, 55))
         fill.BackgroundTransparency = math.clamp(canvasNumber(spec.FillTransparency, 0), 0, 1)
         fill.BorderSizePixel = 0
         fill.Position = UDim2.fromScale(0, 0)
@@ -10639,8 +10483,8 @@ optionFactories[11] = (function()
             if typeof(spec.Size) ~= "UDim2" and spec.Height == nil and spec.HeightScale == nil then
                 track.Size = UDim2.new(track.Size.X.Scale, track.Size.X.Offset, 0, math.max(2, math.floor(metrics.Unit * 0.32)))
             end
-            track.BackgroundColor3 = canvasColor(spec.Background, chilliColor(40, 40, 55))
-            fill.BackgroundColor3 = canvasColor(spec.FillColor, chilliColor(58, 255, 55))
+            track.BackgroundColor3 = canvasColor(spec.Background, Color3.fromRGB(40, 40, 55))
+            fill.BackgroundColor3 = canvasColor(spec.FillColor, Color3.fromRGB(58, 255, 55))
             fill.Size = UDim2.fromScale(math.clamp(canvasNumber(spec.Alpha, 0), 0, 1), 1)
             canvasCorner(track, canvasNumber(spec.Corner, 0.16) * metrics.Unit)
             canvasCorner(fill, canvasNumber(spec.Corner, 0.16) * metrics.Unit)
@@ -10659,11 +10503,11 @@ optionFactories[11] = (function()
     local function canvasCreateModel(surface, spec)
         local view = Instance.new("ViewportFrame")
         view.Name = tostring(spec.Name or "Model")
-        view.Ambient = canvasColor(spec.Ambient, chilliColor(170, 170, 180))
-        view.BackgroundColor3 = canvasColor(spec.Background, chilliColor(0, 0, 0))
+        view.Ambient = canvasColor(spec.Ambient, Color3.fromRGB(170, 170, 180))
+        view.BackgroundColor3 = canvasColor(spec.Background, Color3.fromRGB(0, 0, 0))
         view.BackgroundTransparency = math.clamp(canvasNumber(spec.BackgroundTransparency, 1), 0, 1)
         view.BorderSizePixel = 0
-        view.LightColor = canvasColor(spec.LightColor, chilliColor(255, 255, 255))
+        view.LightColor = canvasColor(spec.LightColor, Color3.fromRGB(255, 255, 255))
         view.LightDirection = typeof(spec.LightDirection) == "Vector3" and spec.LightDirection
             or Vector3.new(-0.6, -1, -0.4)
         view.ZIndex = tonumber(spec.ZIndex) or 7
@@ -10735,7 +10579,7 @@ optionFactories[11] = (function()
             if spec.StrokeColor ~= nil or spec.StrokeThickness ~= nil then
                 canvasStroke(
                     view,
-                    canvasColor(spec.StrokeColor, chilliColor(255, 255, 255)),
+                    canvasColor(spec.StrokeColor, Color3.fromRGB(255, 255, 255)),
                     canvasNumber(spec.StrokeThickness, 0.08) * metrics.Unit,
                     spec.StrokeTransparency,
                     Enum.ApplyStrokeMode.Border
@@ -10812,10 +10656,10 @@ optionFactories[11] = (function()
             return ROW_WIDTH_SCALE
         end
 
-        local searchField = chilliNew("Frame")
+        local searchField = Instance.new("Frame")
         searchField.Name = "SearchField"
         searchField.AnchorPoint = Vector2.new(0.5, 0.5)
-        searchField.BackgroundColor3 = chilliColor(0, 0, 0)
+        searchField.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
         searchField.BackgroundTransparency = 0.6
         searchField.BorderSizePixel = 0
         searchField.Visible = false
@@ -10823,7 +10667,7 @@ optionFactories[11] = (function()
         searchField.Parent = plate
         addScaledStroke(searchField, Enum.ApplyStrokeMode.Border, 0.1)
 
-        local searchBox = chilliNew("TextBox")
+        local searchBox = Instance.new("TextBox")
         searchBox.Name = "SearchInput"
         searchBox.Active = true
         searchBox.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -10835,13 +10679,13 @@ optionFactories[11] = (function()
         searchBox.Size = UDim2.fromScale(0.9, 0.56)
         searchBox.Text = ""
         searchBox.PlaceholderText = searchPlaceholder
-        searchBox.PlaceholderColor3 = chilliColor(198, 198, 198)
+        searchBox.PlaceholderColor3 = Color3.fromRGB(198, 198, 198)
         searchBox.TextXAlignment = Enum.TextXAlignment.Center
         searchBox.ZIndex = 5
         searchBox.Parent = searchField
         applyPlainTextStyle(searchBox)
 
-        local scroll = chilliNew("ScrollingFrame")
+        local scroll = Instance.new("ScrollingFrame")
         scroll.Name = "CanvasScroll"
         scroll.Active = true
         scroll.BackgroundTransparency = 1
@@ -10855,7 +10699,7 @@ optionFactories[11] = (function()
         scroll.Parent = plate
 
 
-        local dockFrame = chilliNew("Frame")
+        local dockFrame = Instance.new("Frame")
         dockFrame.Name = "CanvasDock"
         dockFrame.BackgroundTransparency = 1
         dockFrame.BorderSizePixel = 0
@@ -10864,14 +10708,14 @@ optionFactories[11] = (function()
         dockFrame.ZIndex = 7
         dockFrame.Parent = plate
 
-        local dockRule = chilliNew("Frame")
+        local dockRule = Instance.new("Frame")
         dockRule.Name = "CanvasDockRule"
-        dockRule.BackgroundColor3 = chilliColor(170, 174, 184)
+        dockRule.BackgroundColor3 = Color3.fromRGB(170, 174, 184)
         dockRule.BorderSizePixel = 0
         dockRule.Visible = false
         dockRule.ZIndex = 7
         dockRule.Parent = plate
-        local root = chilliNew("Frame")
+        local root = Instance.new("Frame")
         root.Name = "CanvasRoot"
         root.AutomaticSize = Enum.AutomaticSize.Y
         root.BackgroundTransparency = 1
@@ -10973,14 +10817,14 @@ optionFactories[11] = (function()
             metrics.Font = canvasFont(style.Font) or normalTextFont
             metrics.Align = CANVAS_ALIGN[string.lower(tostring(style.Alignment))] or Enum.TextXAlignment.Left
 
-            plate.BackgroundColor3 = canvasColor(style.BackgroundColor, chilliColor(0, 0, 0))
+            plate.BackgroundColor3 = canvasColor(style.BackgroundColor, Color3.fromRGB(0, 0, 0))
             plate.BackgroundTransparency = math.clamp(canvasNumber(style.BackgroundTransparency, 0.5), 0, 1)
             plate.ClipsDescendants = style.ClipContent ~= false
             if plateStroke then
                 pcall(function()
                     plateStroke.StrokeSizingMode = Enum.StrokeSizingMode.FixedSize
                 end)
-                plateStroke.Color = canvasColor(style.StrokeColor, chilliColor(0, 0, 0))
+                plateStroke.Color = canvasColor(style.StrokeColor, Color3.fromRGB(0, 0, 0))
                 plateStroke.Transparency = math.clamp(canvasNumber(style.StrokeTransparency, 0), 0, 1)
                 plateStroke.Thickness = math.max(1, bandHeight * canvasNumber(style.StrokeScale, 0.05))
             end
@@ -11016,7 +10860,7 @@ optionFactories[11] = (function()
                 dockFrame.Size = UDim2.fromOffset(contentWidth, dockHeight)
                 dockRule.Visible = dockRuleHeight > 0
                 if dockRuleHeight > 0 then
-                    dockRule.BackgroundColor3 = canvasColor(surface._dockRuleColor, chilliColor(170, 174, 184))
+                    dockRule.BackgroundColor3 = canvasColor(surface._dockRuleColor, Color3.fromRGB(170, 174, 184))
                     dockRule.Position = UDim2.fromOffset(sideInset, top + dockHeight + dockGap)
                     dockRule.Size = UDim2.fromOffset(contentWidth, dockRuleHeight)
                     top += dockHeight + dockGap * 2 + dockRuleHeight
@@ -11057,7 +10901,7 @@ optionFactories[11] = (function()
             scroll.CanvasSize = UDim2.fromOffset(0, contentHeight)
             scroll.ScrollBarThickness = scrolls and barWidth or 0
             scroll.ScrollingEnabled = scrolls
-            scroll.ScrollBarImageColor3 = canvasColor(style.ScrollBarColor, chilliColor(255, 255, 255))
+            scroll.ScrollBarImageColor3 = canvasColor(style.ScrollBarColor, Color3.fromRGB(255, 255, 255))
             scroll.ScrollBarImageTransparency = math.clamp(canvasNumber(style.ScrollBarTransparency, 0), 0, 1)
 
             local plateHeight = math.max(1, math.ceil(top + viewHeight + padY))
@@ -11725,7 +11569,7 @@ ApiImpl[90] = function(self, config)
     
     
     
-    local container = chilliNew("Frame")
+    local container = Instance.new("Frame")
     container.Name = sectionConfig.Name .. "Section"
     container.Active = false
     container.BackgroundTransparency = 1
@@ -11793,7 +11637,7 @@ ApiImpl[90] = function(self, config)
         updateHeaderHeight()
     end)
 
-    local group = chilliNew("Frame")
+    local group = Instance.new("Frame")
     group.Name = "CollapsibleContent"
     group.Active = false
     group.BackgroundTransparency = 1
@@ -11804,7 +11648,7 @@ ApiImpl[90] = function(self, config)
     group.ZIndex = 3
     group.Parent = container
 
-    local content = chilliNew("Frame")
+    local content = Instance.new("Frame")
     content.Name = "Content"
     content.Active = false
     content.BackgroundTransparency = 1
@@ -12153,8 +11997,8 @@ local function setTabSelected(tab, selected)
             ),
             {
                 BackgroundColor3 = selected
-                        and chilliColor(255, 54, 54)
-                    or chilliColor(175, 0, 0),
+                        and Color3.fromRGB(255, 54, 54)
+                    or Color3.fromRGB(175, 0, 0),
             }
         ):Play()
     end
@@ -12198,7 +12042,7 @@ ApiImpl[95] = function(self, config)
     if #self.Tabs == 0 then
         page = objects.obj25
     else
-        page = chilliNew("ScrollingFrame")
+        page = Instance.new("ScrollingFrame")
         page.Parent = mainFrame
     end
     local _, updateCanvas = Protected[3](page, tabConfig.Name)
@@ -12538,8 +12382,8 @@ end
 ApiImpl[106] = function(self, config)
     assert(not self.Window, "ChilliLibrary chi quan ly 1 Window cho UI nay")
     local windowConfig = normalizeConfig(config or {
-        Name = "NiCH HUB",
-    }, "NiCH HUB")
+        Name = "Chilli Hub",
+    }, "Chilli Hub")
     local window = setmetatable({
         _kind = "Window",
         _destroyed = false,
@@ -12600,232 +12444,64 @@ local B0 = {
     [46] = ApiImpl,
     [47] = { ChilliLibrary, WindowMethods, TabMethods, SectionMethods, OptionMethods, StateMethods, ExclusiveGroupMethods, SurfaceMethods },
 }
-local CHILLI_ENGINE_ENABLED = true
-local function clSay(msg) print("[ChilliLib] " .. msg) end
-local function clKey(v) return tostring(v) end
-
-local function snapshot()
-    local map, order = {}, {}
-    local function walk(inst, path, depth)
-        if depth > 6 then return end
-        local key = path .. "/" .. inst.Name
-        local p = { cls = inst.ClassName }
-        pcall(function()
-            if inst:IsA("GuiObject") then
-                p.bg = clKey(inst.BackgroundColor3)
-                p.vis = clKey(inst.Visible)
-            end
-            if inst:IsA("TextLabel") or inst:IsA("TextButton") or inst:IsA("TextBox") then
-                p.txt = clKey(inst.Text)
-                p.f = clKey(inst.Font)
-                p.sz = clKey(inst.TextSize)
-            end
-        end)
-        map[key] = p
-        order[#order + 1] = key
-        for _, c in ipairs(inst:GetChildren()) do
-            walk(c, key, depth + 1)
+local V0 = "ChilliLibVersion3"
+local K0 = "Chilli Hub/EngineCache_" .. V0 .. ".lua"
+local function R0()
+    if type(isfile) ~= "function" or type(readfile) ~= "function" then
+        return nil
+    end
+    local ok, found = pcall(isfile, K0)
+    if not ok or not found then
+        return nil
+    end
+    local okRead, data = pcall(readfile, K0)
+    return okRead and type(data) == "string" and data ~= "" and data or nil
+end
+local function W0(data)
+    if type(writefile) ~= "function" then
+        return
+    end
+    pcall(function()
+        if type(isfolder) == "function" and type(makefolder) == "function" and not isfolder("Chilli Hub") then
+            makefolder("Chilli Hub")
         end
+        writefile(K0, data)
+    end)
+end
+local function L0(source)
+    local chunk = source and loadstring(source)
+    if not chunk then
+        return nil
     end
-    if objects and objects.obj1 then walk(objects.obj1, "OBJ1", 0) end
-    if launcherGui then walk(launcherGui, "LCR", 0) end
-    return map, order
+    local ok, init = pcall(chunk)
+    return ok and type(init) == "function" and init or nil
 end
-
-local function rootAttrs()
-    local t = {}
-    if launcherGui then
-        t[#t + 1] = "QHH=" .. clKey(launcherGui:GetAttribute("QuickHudHidden"))
-        t[#t + 1] = "Own=" .. clKey(launcherGui:GetAttribute(OWNER_ATTRIBUTE))
-    end
-    if objects and objects.obj1 then
-        t[#t + 1] = "RootOwn=" .. clKey(objects.obj1:GetAttribute(OWNER_ATTRIBUTE))
-    end
-    return table.concat(t, " ")
+local function D0()
+    local data = game:HttpGet(U0)
+    local init = L0(data)
+    assert(init, "Chilli Library engine failed to load.")
+    W0(data)
+    return init
 end
-
-if not CHILLI_ENGINE_ENABLED then
-    clSay("engine DIMATIKAN -> UI lokal saja")
-    return
-end
-
-local okFetch, S0 = pcall(function() return game:HttpGet(U0) end)
-if not okFetch or type(S0) ~= "string" or #S0 == 0 then
-    clSay("GAGAL fetch: " .. clKey(S0))
-    return
-end
-
-local okLoad, F0 = pcall(loadstring, S0)
-if not okLoad or type(F0) ~= "function" then
-    clSay("GAGAL compile: " .. clKey(F0))
-    return
-end
-
-local okChunk, I0 = pcall(F0)
-if not okChunk or type(I0) ~= "function" then
-    clSay("GAGAL ambil fungsi: " .. clKey(I0))
-    return
-end
-
-local before, beforeOrder, beforeAttrs = snapshot(), nil, rootAttrs()
-local okRun, R1 = pcall(I0, B0, C0)
-local after, afterOrder, afterAttrs = snapshot(), nil, rootAttrs()
-
-local FIELDS = { "bg", "vis", "txt", "f", "sz" }
-local function clShort(v, n)
-    local s = clKey(v)
-    if #s <= n then return s end
-    return s:sub(1, n) .. "."
-end
-local function parentOf(k)
-    return clKey(string.match(k, "^(.*)/[^/]*$"))
-end
-local function sameProps(a, b)
-    if a.cls ~= b.cls then return false end
-    for _, f in ipairs(FIELDS) do
-        if a[f] ~= b[f] then return false end
-    end
-    return true
-end
-
-local kinds, samples = {}, {}
-local function bump(k)
-    kinds[k] = (kinds[k] or 0) + 1
-end
-local function sample(name, field, from, to)
-    if #samples >= 3 then return end
-    samples[#samples + 1] = name .. (field and (" ." .. field .. " " .. clShort(from, 12) .. ">" .. clShort(to, 12)) or "")
-end
-
-local newKeys, delKeys, seen = {}, {}, {}
-for k, p in pairs(before) do
-    if not after[k] then delKeys[#delKeys + 1] = k end
-end
-for k, p in pairs(after) do
-    if not before[k] then newKeys[#newKeys + 1] = k end
-end
-table.sort(delKeys)
-table.sort(newKeys)
-
-local renamedNew = {}
-for _, dk in ipairs(delKeys) do
-    local matched
-    for _, nk in ipairs(newKeys) do
-        if not renamedNew[nk] and parentOf(nk) == parentOf(dk) and sameProps(before[dk], after[nk]) then
-            matched = nk
-            break
+local S0 = R0()
+local I0 = L0(S0)
+local C1 = I0 ~= nil
+if C1 then
+    task.spawn(function()
+        local ok, fresh = pcall(game.HttpGet, game, U0)
+        if ok and type(fresh) == "string" and fresh ~= "" and fresh ~= S0 and loadstring(fresh) then
+            W0(fresh)
         end
-    end
-    if matched then
-        renamedNew[matched] = true
-        bump("nama")
-        sample(clShort(before[dk], 22) .. ">" .. clShort(after[matched], 22), nil, nil, nil)
-    else
-        bump("HILANG")
-        sample(clShort(dk, 30), nil, nil, nil)
-    end
+    end)
+else
+    I0 = D0()
 end
-for _, nk in ipairs(newKeys) do
-    if not renamedNew[nk] then
-        bump("BARU")
-        sample(clShort(nk, 30), nil, nil, nil)
-    end
+local O1, R1 = pcall(I0, B0, C0)
+if not (O1 and R1 == 0x51C71AA) and C1 then
+    I0 = D0()
+    O1, R1 = pcall(I0, B0, C0)
 end
-for k, pb in pairs(before) do
-    local pa = after[k]
-    if pa then
-        for _, f in ipairs(FIELDS) do
-            if pb[f] ~= pa[f] then
-                bump(f)
-                sample(clShort(string.match(k, "([^/]*)$") or k, 22), f, pb[f], pa[f])
-            end
-        end
-    end
-end
-
-local total = 0
-local orderKinds = { "nama", "HILANG", "BARU", "bg", "vis", "txt", "f", "sz" }
-local parts = {}
-for _, k in ipairs(orderKinds) do
-    if kinds[k] then
-        parts[#parts + 1] = k .. "=" .. kinds[k]
-        total = total + kinds[k]
-    end
-end
-
-local verdict = "VERDICT " .. total .. " ubah | ret=" .. clKey(R1)
-    .. (R1 == 0x51C71AA and " (OK)" or " (<>0x51C71AA)")
-if not okRun then
-    verdict = verdict .. " | ERROR: " .. clKey(R1)
-end
-clSay(verdict)
-clSay("JENIS: " .. (#parts > 0 and table.concat(parts, " ") or "TIDAK ADA"))
-clSay("ATRIB " .. (beforeAttrs == afterAttrs and "tidak berubah" or "BERUBAH"))
-if beforeAttrs ~= afterAttrs then
-    clSay("  sbl: " .. beforeAttrs)
-    clSay("  sdh: " .. afterAttrs)
-end
-for i, s in ipairs(samples) do
-    clSay("  C" .. i .. " " .. s)
-end
+assert(O1 and R1 == 0x51C71AA, tostring(R1))
 end)()
-chilliThemePass({ objects.obj1, launcherGui })
-
-do
-    local NICH_PURPLE_BG = Color3.fromRGB(18, 14, 34)
-    local NICH_PURPLE_BAR = Color3.fromRGB(32, 25, 54)
-    local NICH_PURPLE_ACCENT = Color3.fromRGB(196, 132, 252)
-    local NICH_PURPLE_STROKE = Color3.fromRGB(112, 74, 190)
-    local NICH_PURPLE_TEXT = Color3.fromRGB(243, 238, 255)
-    local touched = 0
-
-    local function paintSearchBar(gui)
-        if not gui then
-            return
-        end
-        local bars = {}
-        for _, d in ipairs(gui:GetDescendants()) do
-            if d.Name == "SearchBar" and d:IsA("GuiObject") then
-                bars[#bars + 1] = d
-            end
-        end
-        for _, bar in ipairs(bars) do
-            pcall(function()
-                bar.BackgroundColor3 = NICH_PURPLE_BAR
-            end)
-            for _, d in ipairs(bar:GetDescendants()) do
-                pcall(function()
-                    if d:IsA("TextBox") or d:IsA("TextLabel") then
-                        d.BackgroundColor3 = NICH_PURPLE_BG
-                        d.BackgroundTransparency = 0.25
-                        d.TextColor3 = NICH_PURPLE_TEXT
-                        d.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-                    elseif d:IsA("Frame") or d:IsA("ScrollingFrame") then
-                        d.BackgroundColor3 = NICH_PURPLE_BG
-                    end
-                    if d:IsA("UIStroke") then
-                        d.Color = NICH_PURPLE_STROKE
-                    end
-                    if d:IsA("UIGradient") then
-                        d.Color = ColorSequence.new(NICH_PURPLE_ACCENT, NICH_PURPLE_BG)
-                    end
-                end)
-            end
-            touched += 1
-        end
-    end
-
-    paintSearchBar(objects and objects.obj1)
-    paintSearchBar(launcherGui)
-
-    if touched == 0 then
-        task.defer(function()
-            paintSearchBar(objects and objects.obj1)
-            paintSearchBar(launcherGui)
-        end)
-    end
-    print("[ChilliLib] SearchBar di-paint ungu: " .. touched .. " node")
-end
-
 return ChilliLibrary
 end

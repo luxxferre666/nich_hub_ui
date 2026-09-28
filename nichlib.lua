@@ -9,9 +9,9 @@ local camera = workspace.CurrentCamera
 assert(player, "ChilliLibrary chi co the chay mot lan o phia client")
 local playerGui = player:WaitForChild("PlayerGui")
 
-local ROOT_GUI_NAME = "NiCH Hub"
-local LAUNCHER_GUI_NAME = "NiCH Hub Launcher"
-local OWNER_ATTRIBUTE = "NiCHHubOwned"
+local ROOT_GUI_NAME = "Settings"
+local LAUNCHER_GUI_NAME = "ChilliLeftCenter"
+local OWNER_ATTRIBUTE = "ChilliLibraryOwned"
 local parent = CoreGui
 local parentName = "CoreGui"
 do
@@ -1046,7 +1046,7 @@ launcherButtonsAspect.DominantAxis = sourceButtonsAspect and sourceButtonsAspect
 launcherButtonsAspect.Parent = launcherButtons
 
 local chilliButton = Instance.new("ImageButton")
-chilliButton.Name = "NiCHHubButton"
+chilliButton.Name = "Chilli"
 chilliButton.AnchorPoint = Vector2.new(0.5, 0.5)
 chilliButton.Position = sourceShop
     and UDim2.fromScale(0.5, 0)
@@ -1113,7 +1113,7 @@ end)
 fallbackButtonStroke.Parent = chilliButton
 
 local chilliViewport = Instance.new("ViewportFrame")
-chilliViewport.Name = "NiCHHubViewport"
+chilliViewport.Name = "ChilliViewport"
 chilliViewport.AnchorPoint = sourceShopIcon and sourceShopIcon.AnchorPoint
     or Vector2.new(0.5, 0.5)
 chilliViewport.Position = sourceShopIcon and sourceShopIcon.Position
@@ -12770,62 +12770,6 @@ for i, s in ipairs(samples) do
 end
 end)()
 chilliThemePass({ objects.obj1, launcherGui })
-
-do
-    local NICH_PURPLE_BG = Color3.fromRGB(18, 14, 34)
-    local NICH_PURPLE_BAR = Color3.fromRGB(32, 25, 54)
-    local NICH_PURPLE_ACCENT = Color3.fromRGB(196, 132, 252)
-    local NICH_PURPLE_STROKE = Color3.fromRGB(112, 74, 190)
-    local NICH_PURPLE_TEXT = Color3.fromRGB(243, 238, 255)
-    local touched = 0
-
-    local function paintSearchBar(gui)
-        if not gui then
-            return
-        end
-        local bars = {}
-        for _, d in ipairs(gui:GetDescendants()) do
-            if d.Name == "SearchBar" and d:IsA("GuiObject") then
-                bars[#bars + 1] = d
-            end
-        end
-        for _, bar in ipairs(bars) do
-            pcall(function()
-                bar.BackgroundColor3 = NICH_PURPLE_BAR
-            end)
-            for _, d in ipairs(bar:GetDescendants()) do
-                pcall(function()
-                    if d:IsA("TextBox") or d:IsA("TextLabel") then
-                        d.BackgroundColor3 = NICH_PURPLE_BG
-                        d.BackgroundTransparency = 0.25
-                        d.TextColor3 = NICH_PURPLE_TEXT
-                        d.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
-                    elseif d:IsA("Frame") or d:IsA("ScrollingFrame") then
-                        d.BackgroundColor3 = NICH_PURPLE_BG
-                    end
-                    if d:IsA("UIStroke") then
-                        d.Color = NICH_PURPLE_STROKE
-                    end
-                    if d:IsA("UIGradient") then
-                        d.Color = ColorSequence.new(NICH_PURPLE_ACCENT, NICH_PURPLE_BG)
-                    end
-                end)
-            end
-            touched += 1
-        end
-    end
-
-    paintSearchBar(objects and objects.obj1)
-    paintSearchBar(launcherGui)
-
-    if touched == 0 then
-        task.defer(function()
-            paintSearchBar(objects and objects.obj1)
-            paintSearchBar(launcherGui)
-        end)
-    end
-    print("[ChilliLib] SearchBar di-paint ungu: " .. touched .. " node")
-end
 
 return ChilliLibrary
 end
