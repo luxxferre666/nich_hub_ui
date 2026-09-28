@@ -12605,26 +12605,31 @@ local function clSay(msg) print("[ChilliLib] " .. msg) end
 local function clKey(v) return tostring(v) end
 
 local function snapshot()
-    local lines = {}
+    local map, order = {}, {}
     local function walk(inst, path, depth)
         if depth > 6 then return end
-        local rec = path .. "|" .. inst.ClassName .. "|" .. inst.Name
+        local key = path .. "/" .. inst.Name
+        local p = { cls = inst.ClassName }
         pcall(function()
             if inst:IsA("GuiObject") then
-                rec = rec .. "|bg=" .. clKey(inst.BackgroundColor3) .. "|vis=" .. clKey(inst.Visible)
-                if inst:IsA("TextLabel") or inst:IsA("TextButton") or inst:IsA("TextBox") then
-                    rec = rec .. "|txt=" .. clKey(inst.Text) .. "|f=" .. clKey(inst.Font) .. "|sz=" .. clKey(inst.TextSize)
-                end
+                p.bg = clKey(inst.BackgroundColor3)
+                p.vis = clKey(inst.Visible)
+            end
+            if inst:IsA("TextLabel") or inst:IsA("TextButton") or inst:IsA("TextBox") then
+                p.txt = clKey(inst.Text)
+                p.f = clKey(inst.Font)
+                p.sz = clKey(inst.TextSize)
             end
         end)
-        lines[#lines + 1] = rec
+        map[key] = p
+        order[#order + 1] = key
         for _, c in ipairs(inst:GetChildren()) do
-            walk(c, path .. "/" .. inst.Name, depth + 1)
+            walk(c, key, depth + 1)
         end
     end
     if objects and objects.obj1 then walk(objects.obj1, "OBJ1", 0) end
     if launcherGui then walk(launcherGui, "LCR", 0) end
-    return lines
+    return map, order
 end
 
 local function rootAttrs()
@@ -12662,40 +12667,106 @@ if not okChunk or type(I0) ~= "function" then
     return
 end
 
-local before, beforeAttrs = snapshot(), rootAttrs()
+local before, beforeOrder, beforeAttrs = snapshot(), nil, rootAttrs()
 local okRun, R1 = pcall(I0, B0, C0)
-local after, afterAttrs = snapshot(), rootAttrs()
+local after, afterOrder, afterAttrs = snapshot(), nil, rootAttrs()
 
-local setB, added = {}, {}
-for _, l in ipairs(before) do setB[l] = true end
-for _, l in ipairs(after) do if not setB[l] then added[#added + 1] = l end end
-local setA, removed = {}, {}
-for _, l in ipairs(after) do setA[l] = true end
-for _, l in ipairs(before) do if not setA[l] then removed[#removed + 1] = l end end
+local FIELDS = { "bg", "vis", "txt", "f", "sz" }
+local function clShort(v, n)
+    local s = clKey(v)
+    if #s <= n then return s end
+    return s:sub(1, n) .. "."
+end
+local function parentOf(k)
+    return clKey(string.match(k, "^(.*)/[^/]*$"))
+end
+local function sameProps(a, b)
+    if a.cls ~= b.cls then return false end
+    for _, f in ipairs(FIELDS) do
+        if a[f] ~= b[f] then return false end
+    end
+    return true
+end
 
-local verdict = "VERDICT " .. (#added + #removed) .. " ubah | node " .. #before .. "->" .. #after
-    .. " | ret=" .. clKey(R1) .. (R1 == 0x51C71AA and " (OK)" or " (<>0x51C71AA)")
+local kinds, samples = {}, {}
+local function bump(k)
+    kinds[k] = (kinds[k] or 0) + 1
+end
+local function sample(name, field, from, to)
+    if #samples >= 3 then return end
+    samples[#samples + 1] = name .. (field and (" ." .. field .. " " .. clShort(from, 12) .. ">" .. clShort(to, 12)) or "")
+end
+
+local newKeys, delKeys, seen = {}, {}, {}
+for k, p in pairs(before) do
+    if not after[k] then delKeys[#delKeys + 1] = k end
+end
+for k, p in pairs(after) do
+    if not before[k] then newKeys[#newKeys + 1] = k end
+end
+table.sort(delKeys)
+table.sort(newKeys)
+
+local renamedNew = {}
+for _, dk in ipairs(delKeys) do
+    local matched
+    for _, nk in ipairs(newKeys) do
+        if not renamedNew[nk] and parentOf(nk) == parentOf(dk) and sameProps(before[dk], after[nk]) then
+            matched = nk
+            break
+        end
+    end
+    if matched then
+        renamedNew[matched] = true
+        bump("nama")
+        sample(clShort(before[dk], 22) .. ">" .. clShort(after[matched], 22), nil, nil, nil)
+    else
+        bump("HILANG")
+        sample(clShort(dk, 30), nil, nil, nil)
+    end
+end
+for _, nk in ipairs(newKeys) do
+    if not renamedNew[nk] then
+        bump("BARU")
+        sample(clShort(nk, 30), nil, nil, nil)
+    end
+end
+for k, pb in pairs(before) do
+    local pa = after[k]
+    if pa then
+        for _, f in ipairs(FIELDS) do
+            if pb[f] ~= pa[f] then
+                bump(f)
+                sample(clShort(string.match(k, "([^/]*)$") or k, 22), f, pb[f], pa[f])
+            end
+        end
+    end
+end
+
+local total = 0
+local orderKinds = { "nama", "HILANG", "BARU", "bg", "vis", "txt", "f", "sz" }
+local parts = {}
+for _, k in ipairs(orderKinds) do
+    if kinds[k] then
+        parts[#parts + 1] = k .. "=" .. kinds[k]
+        total = total + kinds[k]
+    end
+end
+
+local verdict = "VERDICT " .. total .. " ubah | ret=" .. clKey(R1)
+    .. (R1 == 0x51C71AA and " (OK)" or " (<>0x51C71AA)")
 if not okRun then
     verdict = verdict .. " | ERROR: " .. clKey(R1)
 end
 clSay(verdict)
-
+clSay("JENIS: " .. (#parts > 0 and table.concat(parts, " ") or "TIDAK ADA"))
 clSay("ATRIB " .. (beforeAttrs == afterAttrs and "tidak berubah" or "BERUBAH"))
 if beforeAttrs ~= afterAttrs then
     clSay("  sbl: " .. beforeAttrs)
     clSay("  sdh: " .. afterAttrs)
 end
-
-local shown = 0
-for _, l in ipairs(added) do
-    shown += 1
-    if shown > 6 then break end
-    clSay("  + " .. l)
-end
-for _, l in ipairs(removed) do
-    shown += 1
-    if shown > 6 then break end
-    clSay("  - " .. l)
+for i, s in ipairs(samples) do
+    clSay("  C" .. i .. " " .. s)
 end
 end)()
 chilliThemePass({ objects.obj1, launcherGui })
