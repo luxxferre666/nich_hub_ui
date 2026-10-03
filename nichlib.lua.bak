@@ -6,12 +6,12 @@ local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local GuiService = game:GetService("GuiService")
 local camera = workspace.CurrentCamera
-assert(player, "NichLibrary chi co the chay mot lan o phia client")
+assert(player, "ChilliLibrary chi co the chay mot lan o phia client")
 local playerGui = player:WaitForChild("PlayerGui")
 
 local ROOT_GUI_NAME = "Settings"
 local LAUNCHER_GUI_NAME = "ChilliLeftCenter"
-local OWNER_ATTRIBUTE = "NichLibraryOwned"
+local OWNER_ATTRIBUTE = "ChilliLibraryOwned"
 local parent = CoreGui
 local parentName = "CoreGui"
 do
@@ -25,13 +25,13 @@ do
 
     local ok, problem = pcall(function()
         local probe = Instance.new("ScreenGui")
-        probe.Name = "NichLibraryUIProbe"
+        probe.Name = "ChilliLibraryUIProbe"
         probe.Parent = parent
         probe:Destroy()
     end)
     if not ok then
         error(
-            "NichLibrary requires write access to "
+            "ChilliLibrary requires write access to "
                 .. parentName
                 .. "; PlayerGui fallback is disabled: "
                 .. tostring(problem),
@@ -100,8 +100,8 @@ end
 local cleanupNames = {
     [ROOT_GUI_NAME] = true,
     [LAUNCHER_GUI_NAME] = true,
-    NichLibrarySettings = true,
-    NichLibraryLauncher = true,
+    ChilliLibrarySettings = true,
+    ChilliLibraryLauncher = true,
 }
 local function cleanupOldUiScreens(excludedRoot, excludedLauncher)
     for _, old in ipairs(parent:GetChildren()) do
@@ -1641,7 +1641,7 @@ end))
 
 
 
-local HUD_RENDER_GUARD_NAME = "NichLibraryLeftCenterRenderGuard"
+local HUD_RENDER_GUARD_NAME = "ChilliLibraryLeftCenterRenderGuard"
 
 local function enforceHiddenLeftCenterBeforeRender()
     if not rootGui.Parent
@@ -12424,17 +12424,17 @@ do
     end
 end
 
-local NichLibrary = {
+local ChilliLibrary = {
     NoStateChange = STATE_NO_CHANGE,
     Version = "3.22.0",
     SplitDefaultsApi = "manual-defaults-v1",
 }
 
-NichLibrary.Rich = {
+ChilliLibrary.Rich = {
     Bullet = utf8.char(0x2022),
 }
 
-function NichLibrary.Rich.Escape(text)
+function ChilliLibrary.Rich.Escape(text)
     return (string.gsub(tostring(text), "[<>&]", {
         ["<"] = "&lt;",
         [">"] = "&gt;",
@@ -12442,28 +12442,28 @@ function NichLibrary.Rich.Escape(text)
     }))
 end
 
-function NichLibrary.Rich.Color(color, text)
+function ChilliLibrary.Rich.Color(color, text)
     local hex = typeof(color) == "Color3" and ("#" .. color:ToHex()) or tostring(color)
     return string.format('<font color="%s">%s</font>', hex, tostring(text))
 end
 
-function NichLibrary.Rich.Bold(text)
+function ChilliLibrary.Rich.Bold(text)
     return "<b>" .. tostring(text) .. "</b>"
 end
 
-function NichLibrary.Rich.Italic(text)
+function ChilliLibrary.Rich.Italic(text)
     return "<i>" .. tostring(text) .. "</i>"
 end
 
-function NichLibrary.Rich.Muted(text)
-    return NichLibrary.Rich.Color("#AAAAAA", text)
+function ChilliLibrary.Rich.Muted(text)
+    return ChilliLibrary.Rich.Color("#AAAAAA", text)
 end
 
-function NichLibrary.Rich.Rule(count)
-    return NichLibrary.Rich.Color("#444455", string.rep(utf8.char(0x2500), tonumber(count) or 38))
+function ChilliLibrary.Rich.Rule(count)
+    return ChilliLibrary.Rich.Color("#444455", string.rep(utf8.char(0x2500), tonumber(count) or 38))
 end
 
-function NichLibrary.Rich.Join(lines)
+function ChilliLibrary.Rich.Join(lines)
     return table.concat(lines, "\n")
 end
 
@@ -12507,7 +12507,7 @@ ApiImpl[105] = function(self)
     end
 
     self._destroyed = true
-    NichLibrary.Window = nil
+    ChilliLibrary.Window = nil
     ContentScale.ReflowTabs = nil
     hudAnimationSerial = hudAnimationSerial + 1
     cancelHudTween()
@@ -12536,7 +12536,7 @@ ApiImpl[105] = function(self)
 end
 
 ApiImpl[106] = function(self, config)
-    assert(not self.Window, "NichLibrary chi quan ly 1 Window cho UI nay")
+    assert(not self.Window, "ChilliLibrary chi quan ly 1 Window cho UI nay")
     local windowConfig = normalizeConfig(config or {
         Name = "NiCH HUB",
     }, "NiCH HUB")
@@ -12574,7 +12574,7 @@ end
 
 
 (function()
-local U0 = "https://raw.githubusercontent.com/tienkhanh1/spicy/refs/heads/main/ChillyLibraryEngine"
+local U0 = "https://raw.githubusercontent.com/tienkhanh1/spicy/refs/heads/main/ChilliLibraryEngine"
 local B0 = {
     [1] = 0x43534833,
     [2] = Protected, [3] = Runtime,
@@ -12596,9 +12596,9 @@ local B0 = {
     [37] = CHEVRON_COLOR, [38] = UNIT_CHEVRON_COLOR,
     [39] = ROW_ASPECT_WITH_NOTE, [40] = attachScaleFeedback,
     [41] = buildFixedRow, [42] = closeActiveDropdown,
-    [43] = safeCallback, [44] = copyTable, [45] = NichLibrary,
+    [43] = safeCallback, [44] = copyTable, [45] = ChilliLibrary,
     [46] = ApiImpl,
-    [47] = { NichLibrary, WindowMethods, TabMethods, SectionMethods, OptionMethods, StateMethods, ExclusiveGroupMethods, SurfaceMethods },
+    [47] = { ChilliLibrary, WindowMethods, TabMethods, SectionMethods, OptionMethods, StateMethods, ExclusiveGroupMethods, SurfaceMethods },
 }
 local CHILLI_ENGINE_ENABLED = true
 local function clSay(msg) print("[ChilliLib] " .. msg) end
@@ -12771,5 +12771,5 @@ end
 end)()
 chilliThemePass({ objects.obj1, launcherGui })
 
-return NichLibrary
+return ChilliLibrary
 end
