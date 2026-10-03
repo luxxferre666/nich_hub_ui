@@ -12574,7 +12574,7 @@ end
 
 
 (function()
-local U0 = "https://raw.githubusercontent.com/tienkhanh1/spicy/refs/heads/main/ChillyLibraryEngine"
+local U0 = "https://raw.githubusercontent.com/tienkhanh1/spicy/refs/heads/main/ChilliLibraryEngine"
 local B0 = {
     [1] = 0x43534833,
     [2] = Protected, [3] = Runtime,
