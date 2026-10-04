@@ -856,9 +856,9 @@ rootGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 do
     local managedNames = {
-        ChilliAutoGetTargetPanel = true,
+        ChilliAutoGetTargetPanel = false,
         ChilliAutoGetBarGui = true,
-        ChilliFpsPingGui = true,
+        ChilliFpsPingGui = false,
     }
     local boundTargets = setmetatable({}, { __mode = "k" })
 

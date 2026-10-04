@@ -856,9 +856,9 @@ rootGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
 do
     local managedNames = {
-        ChilliAutoGetTargetPanel = true,
+        ChilliAutoGetTargetPanel = false,
         ChilliAutoGetBarGui = true,
-        ChilliFpsPingGui = true,
+        ChilliFpsPingGui = false,
     }
     local boundTargets = setmetatable({}, { __mode = "k" })
 
@@ -12537,7 +12537,7 @@ end
 
 ApiImpl[106] = function(self, config)
     assert(not self.Window, "NichLibrary chi quan ly 1 Window cho UI nay")
-    local windowConfig = normalizeConfig(config or {
+    local windowConfig = normalizeConfig({
         Name = "NiCH HUB",
     }, "NiCH HUB")
     local window = setmetatable({
@@ -12600,7 +12600,7 @@ local B0 = {
     [46] = ApiImpl,
     [47] = { NichLibrary, WindowMethods, TabMethods, SectionMethods, OptionMethods, StateMethods, ExclusiveGroupMethods, SurfaceMethods },
 }
-local CHILLI_ENGINE_ENABLED = false
+local CHILLI_ENGINE_ENABLED = true
 local function clSay(msg) print("[ChilliLib] " .. msg) end
 local function clKey(v) return tostring(v) end
 
