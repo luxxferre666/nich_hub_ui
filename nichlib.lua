@@ -12600,7 +12600,7 @@ local B0 = {
     [46] = ApiImpl,
     [47] = { NichLibrary, WindowMethods, TabMethods, SectionMethods, OptionMethods, StateMethods, ExclusiveGroupMethods, SurfaceMethods },
 }
-local CHILLI_ENGINE_ENABLED = true
+local CHILLI_ENGINE_ENABLED = false
 local function clSay(msg) print("[ChilliLib] " .. msg) end
 local function clKey(v) return tostring(v) end
 
