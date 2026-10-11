@@ -1185,7 +1185,7 @@ local function buildnotify(cfg, top)
 	icon.Size = UDim2.new(0, 50, 0, 50)
 	icon.Position = UDim2.new(0, -12, 0.9, 0)
 	icon.AnchorPoint = Vector2.new(0, 0.5)
-	icon.Image = cfg.Icon or "rbxassetid://114786713172034"
+	icon.Image = cfg.Icon or "rbxassetid://118806041068745"
 
 	local titlewidth = 0
 	pcall(function()

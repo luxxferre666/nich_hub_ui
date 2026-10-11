@@ -361,8 +361,8 @@ if getgenv().ChloeX_Running then
 	pcall(function()
 		sv.sg:SetCore("SendNotification", {
 			Title = "Nich Already Opened",
-			Text = "Destroy and Re-Open Sena?",
-			Icon = "rbxassetid://96240498384290",
+			Text = "Destroy and Re-Open Nich?",
+			Icon = "rbxassetid://122031425227672",
 			Duration = 10,
 			Button1 = "Re-Open",
 			Button2 = "Cancel",
@@ -1185,7 +1185,7 @@ local function buildnotify(cfg, top)
 	icon.Size = UDim2.new(0, 50, 0, 50)
 	icon.Position = UDim2.new(0, -12, 0.9, 0)
 	icon.AnchorPoint = Vector2.new(0, 0.5)
-	icon.Image = cfg.Icon or "rbxassetid://6859372539"
+	icon.Image = cfg.Icon or "rbxassetid://114786713172034"
 
 	local titlewidth = 0
 	pcall(function()
@@ -3198,7 +3198,7 @@ function Chloex:Window(guiconfig)
 	guiconfig.Version = guiconfig.Version or 1
 	local userPassedImage = guiconfig.Image
 	local userPassedToggle = guiconfig.ToggleImage or guiconfig.ToggleIcon or guiconfig.ButtonImage
-	guiconfig.Image = guiconfig.Image or "96240498384290"
+	guiconfig.Image = guiconfig.Image or "122031425227672"
 	guiconfig.ImageSize = tonumber(guiconfig.ImageSize) or 48
 	guiconfig.AutoConfigTab = guiconfig.AutoConfigTab ~= false
 	guiconfig.LazyConfigTab = guiconfig.LazyConfigTab ~= false
@@ -3263,7 +3263,7 @@ function Chloex:Window(guiconfig)
 	local bgRaw = guiconfig.Theme
 		or guiconfig.Background
 		or guiconfig.BackgroundImage
-		or (userPassedImage and tostring(userPassedImage):gsub("%s+", "") ~= "96240498384290" and userPassedImage)
+		or (userPassedImage and tostring(userPassedImage):gsub("%s+", "") ~= "122031425227672" and userPassedImage)
 
 	local bgAsset = nil
 	if bgRaw then
@@ -3935,7 +3935,7 @@ function Chloex:Window(guiconfig)
 		mainbutton.Size = UDim2.new(0, guiconfig.ImageSize, 0, guiconfig.ImageSize)
 		mainbutton.Position = UDim2.new(0, 20, 0, 100)
 		mainbutton.BackgroundTransparency = 1
-		local toggleIcon = userPassedToggle or (not bgAsset and userPassedImage) or "96240498384290"
+		local toggleIcon = userPassedToggle or (not bgAsset and userPassedImage) or "122031425227672"
 		local toggleStr = tostring(toggleIcon):gsub("^%s+", ""):gsub("%s+$", "")
 		if toggleStr:match("^%d+$") then
 			toggleStr = "rbxassetid://" .. toggleStr
@@ -3944,9 +3944,9 @@ function Chloex:Window(guiconfig)
 		end
 		if toggleStr:match("^https?://") then
 			local url = toggleStr
-			mainbutton.Image = urlimage(url, true) or "rbxassetid://96240498384290"
+			mainbutton.Image = urlimage(url, true) or "rbxassetid://122031425227672"
 			task.spawn(function()
-				if not mainbutton.Image:match("^rbxassetid://96240498384290") then
+				if not mainbutton.Image:match("^rbxassetid://122031425227672") then
 					return
 				end
 				local asset = urlimage(url)
