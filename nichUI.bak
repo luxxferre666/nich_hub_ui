@@ -250,13 +250,13 @@ local function urlimage(url, cacheonly)
 	if not name:match("%.%w+$") then
 		name = name .. ".png"
 	end
-	local path = "Sena/cache/" .. name
+	local path = "Nich/cache/" .. name
 	pcall(function()
-		if not isfolder("Sena") then
-			makefolder("Sena")
+		if not isfolder("Nich") then
+			makefolder("Nich")
 		end
-		if not isfolder("Sena/cache") then
-			makefolder("Sena/cache")
+		if not isfolder("Nich/cache") then
+			makefolder("Nich/cache")
 		end
 	end)
 	local cached = false
@@ -360,7 +360,7 @@ if getgenv().ChloeX_Running then
 
 	pcall(function()
 		sv.sg:SetCore("SendNotification", {
-			Title = "Sena Already Opened",
+			Title = "Nich Already Opened",
 			Text = "Destroy and Re-Open Sena?",
 			Icon = "rbxassetid://96240498384290",
 			Duration = 10,
@@ -713,8 +713,8 @@ local function pesseffect(button)
 end
 
 local hasfs = type(isfolder) == "function" and type(makefolder) == "function"
-if hasfs and not isfolder("Sena") then
-	pcall(makefolder, "Sena")
+if hasfs and not isfolder("Nich") then
+	pcall(makefolder, "Nich")
 end
 
 function config:getlist()
@@ -1286,7 +1286,7 @@ end
 
 function Chloex:MakeNotify(notifyconfig)
 	notifyconfig = notifyconfig or {}
-	notifyconfig.Title = tostring(notifyconfig.Title or "Sena")
+	notifyconfig.Title = tostring(notifyconfig.Title or "Nich")
 	notifyconfig.Description = tostring(notifyconfig.Description or "Notification")
 	notifyconfig.Content = tostring(notifyconfig.Content or "Content")
 	notifyconfig.Color = notifyconfig.Color or theme.Accent
@@ -1302,7 +1302,7 @@ end
 
 function chloex(msg, delay, color, title, desc)
 	return Chloex:MakeNotify({
-		Title = title or "Sena",
+		Title = title or "Nich",
 		Description = desc or "Notification",
 		Content = msg or "Content",
 		Color = color or theme.Accent,
@@ -1313,7 +1313,7 @@ end
 function Chloex:Notify(notifyconfig)
 	notifyconfig = notifyconfig or {}
 	return Chloex:MakeNotify({
-		Title = notifyconfig.Title or notifyconfig[1] or "Sena",
+		Title = notifyconfig.Title or notifyconfig[1] or "Nich",
 		Description = notifyconfig.Description or notifyconfig.Desc or "Notification",
 		Content = notifyconfig.Content or notifyconfig.Text or notifyconfig[2] or "",
 		Color = notifyconfig.Color or theme.Accent,
@@ -1341,7 +1341,7 @@ local function ensureannouncegui()
 	end)
 
 	pcall(function()
-		for _, name in ipairs({ "AnnounceGui", "SenaAnnounce" }) do
+		for _, name in ipairs({ "AnnounceGui", "NichAnnounce" }) do
 			local old = parent:FindFirstChild(name) or sv.coregui:FindFirstChild(name)
 			if old then
 				pcall(function()
@@ -1478,7 +1478,7 @@ function Chloex:Announce(announceconfig)
 			title = tostring(announceconfig.Name) .. " " .. title
 		end
 	else
-		title = tostring(announceconfig.Name or "Sena") .. " Announcements"
+		title = tostring(announceconfig.Name or "Nich") .. " Announcements"
 	end
 
 	ensureannouncegui()
@@ -1737,7 +1737,7 @@ end
 
 function Chloex:Prompt(promptconfig)
 	promptconfig = promptconfig or {}
-	local title = tostring(promptconfig.Title or "Sena")
+	local title = tostring(promptconfig.Title or "Nich")
 	local content = tostring(promptconfig.Content or "")
 	local duration = math.max(5, tonumber(promptconfig.Duration) or 60)
 	local avatar = promptconfig.Avatar
@@ -2191,7 +2191,7 @@ task.spawn(function()
 				warn("[SENA] Donator key time is up, locking donator features")
 				Chloex:SetDonator(false)
 				pcall(function()
-					Chloex:Notify({ Title = "Sena", Description = "Donator", Content = "Your donator key has expired. Donator features are locked again.", Duration = 6, Color = theme.Bad })
+					Chloex:Notify({ Title = "Nich", Description = "Donator", Content = "Your donator key has expired. Donator features are locked again.", Duration = 6, Color = theme.Bad })
 				end)
 			end
 		end
@@ -2202,7 +2202,7 @@ local backend = nil
 
 local defaultbackend = {
 	Api = "http://56.10.112.179:8080",
-	Key = "sena_20VvixjHsd1OPPwgHYJAstpM",
+	Key = "Nich_20VvixjHsd1OPPwgHYJAstpM",
 }
 
 local function httpgetjson(url)
@@ -2301,14 +2301,14 @@ local function detectgamename()
 end
 
 local keyfiles = {
-	"SenaHUB/sena_key.txt",
-	"SenaHUB/Sena_AutoSave.json",
-	"sena_key.txt",
-	"Sena/sena_key.txt",
-	"SenaKey.txt",
-	"senahub_key.txt",
-	"Sena_AutoSave.json",
-	"Sena/Sena_AutoSave.json",
+	"NichHUB/sena_key.txt",
+	"NichHUB/Sena_AutoSave.json",
+	"Nich_key.txt",
+	"Nich/sena_key.txt",
+	"NichKey.txt",
+	"Nichhub_key.txt",
+	"Nich_AutoSave.json",
+	"Nich/Sena_AutoSave.json",
 }
 
 local function readsavedkey()
@@ -2340,12 +2340,12 @@ end
 local function savekey(key)
 	pcall(function()
 		if writefile then
-			writefile("sena_key.txt", key)
+			writefile("Nich_key.txt", key)
 			if makefolder and isfolder then
-				if not isfolder("SenaHUB") then
-					pcall(makefolder, "SenaHUB")
+				if not isfolder("NichHUB") then
+					pcall(makefolder, "NichHUB")
 				end
-				pcall(writefile, "SenaHUB/sena_key.txt", key)
+				pcall(writefile, "NichHUB/sena_key.txt", key)
 			end
 		end
 	end)
@@ -2482,7 +2482,7 @@ function Chloex:CheckDonatorKey(customkey)
 		end
 		warn("[SENA] " .. msg)
 		pcall(function()
-			Chloex:Notify({ Title = "Sena", Description = "Free Mode", Content = msg, Duration = 6, Color = theme.Bad })
+			Chloex:Notify({ Title = "Nich", Description = "Free Mode", Content = msg, Duration = 6, Color = theme.Bad })
 		end)
 		return false, reason
 	end
@@ -2535,9 +2535,9 @@ local function handlejoinupdate(this, req)
 				end
 				local ok, err = Chloex:AnswerJoin(id, accepted == true)
 				if not ok then
-					Chloex:Notify({ Title = "Sena", Description = "Request join", Content = "Could not answer: " .. tostring(err), Duration = 4 })
+					Chloex:Notify({ Title = "Nich", Description = "Request join", Content = "Could not answer: " .. tostring(err), Duration = 4 })
 				elseif accepted then
-					Chloex:Notify({ Title = "Sena", Description = "Request join", Content = tostring(req.name or "They") .. " is on the way to your server.", Duration = 4 })
+					Chloex:Notify({ Title = "Nich", Description = "Request join", Content = tostring(req.name or "They") .. " is on the way to your server.", Duration = 4 })
 				end
 			end,
 		})
@@ -2546,9 +2546,9 @@ local function handlejoinupdate(this, req)
 			local place = tonumber(req.place)
 			local job = tostring(req.job or "")
 			if job == tostring(game.JobId) then
-				Chloex:Notify({ Title = "Sena", Description = "Request join", Content = "You are already in " .. tostring(req.to_name or "their") .. "'s server.", Duration = 4 })
+				Chloex:Notify({ Title = "Nich", Description = "Request join", Content = "You are already in " .. tostring(req.to_name or "their") .. "'s server.", Duration = 4 })
 			elseif place and job ~= "" then
-				Chloex:Notify({ Title = "Sena", Description = "Request join", Content = tostring(req.to_name or "They") .. " accepted. Joining their server...", Duration = 5 })
+				Chloex:Notify({ Title = "Nich", Description = "Request join", Content = tostring(req.to_name or "They") .. " accepted. Joining their server...", Duration = 5 })
 				task.delay(1.2, function()
 					pcall(function()
 						local lp = localplayer()
@@ -2559,9 +2559,9 @@ local function handlejoinupdate(this, req)
 				end)
 			end
 		elseif status == "declined" then
-			Chloex:Notify({ Title = "Sena", Description = "Request join", Content = tostring(req.to_name or "They") .. " declined.", Duration = 4 })
+			Chloex:Notify({ Title = "Nich", Description = "Request join", Content = tostring(req.to_name or "They") .. " declined.", Duration = 4 })
 		elseif status == "expired" then
-			Chloex:Notify({ Title = "Sena", Description = "Request join", Content = tostring(req.to_name or "They") .. " did not answer.", Duration = 4 })
+			Chloex:Notify({ Title = "Nich", Description = "Request join", Content = tostring(req.to_name or "They") .. " did not answer.", Duration = 4 })
 		end
 	end
 end
@@ -2648,7 +2648,7 @@ local function startbackendloop(this)
 						warn("[SENA] Backend reports this key is no longer active, locking donator features")
 						Chloex:SetDonator(false)
 						pcall(function()
-							Chloex:Notify({ Title = "Sena", Description = "Donator", Content = "Your donator key is no longer active. Donator features are locked again.", Duration = 6, Color = theme.Bad })
+							Chloex:Notify({ Title = "Nich", Description = "Donator", Content = "Your donator key is no longer active. Donator features are locked again.", Duration = 6, Color = theme.Bad })
 						end)
 					end
 				else
@@ -3027,7 +3027,7 @@ end
 local function keysharenotice()
 	pcall(function()
 		Chloex:Notify({
-			Title = "Sena",
+			Title = "Nich",
 			Description = "Chat",
 			Content = "Pesan diblokir: Dilarang membagikan key lisensi di chat!",
 			Duration = 6,
@@ -3038,7 +3038,7 @@ end
 
 local function badwordkick(err, where)
 	local minutes = err:match("^badword:(%d+)") or "?"
-	local reason = "Sena: kata kasar terdeteksi di " .. where .. ". Ban " .. minutes .. " menit."
+	local reason = "Nich: kata kasar terdeteksi di " .. where .. ". Ban " .. minutes .. " menit."
 	task.delay(1.5, function()
 		pcall(function()
 			local p = localplayer()
@@ -3059,7 +3059,7 @@ function Chloex:SendChat(text, room, hide)
 	end
 
 	local upper = text:upper()
-	if upper:match("SENA%-[%w]+%-[%w]+%-[%w]+") or upper:match("TRIAL%-[%w]+%-[%w]+%-[%w]+") or text:match("%w%w%w%w%-%w%w%w%w%-%w%w%w%w") then
+	if upper:match("Nich%-[%w]+%-[%w]+%-[%w]+") or upper:match("TRIAL%-[%w]+%-[%w]+%-[%w]+") or text:match("%w%w%w%w%-%w%w%w%w%-%w%w%w%w") then
 		keysharenotice()
 		return false, "Sharing key is prohibited"
 	end
@@ -3094,7 +3094,7 @@ function Chloex:SendChat(text, room, hide)
 	local data = httpgetjson(backendurl("/chat/send", {
 		uid = localuserid(),
 		key = backend.Key,
-		name = owner and "Sena" or localusername(),
+		name = owner and "Nich" or localusername(),
 		game = backend.Game,
 		text = sendtext,
 		room = room,
@@ -3191,8 +3191,8 @@ function Chloex:Window(guiconfig)
 	if backend and not backend.Running then
 		Chloex:ConnectBackend({})
 	end
-	guiconfig.Title = guiconfig.Title or "Sena"
-	guiconfig.Footer = guiconfig.Footer or "Sena"
+	guiconfig.Title = guiconfig.Title or "Nich"
+	guiconfig.Footer = guiconfig.Footer or "Nich"
 	guiconfig.Color = guiconfig.Color or theme.Accent
 	guiconfig["Tab Width"] = guiconfig["Tab Width"] or 120
 	guiconfig.Version = guiconfig.Version or 1
@@ -3206,7 +3206,7 @@ function Chloex:Window(guiconfig)
 	guiconfig.ThumbnailDelay = tonumber(guiconfig.ThumbnailDelay) or 8
 
 	local foldername = guiconfig.Folder or guiconfig.Title:gsub("[^%w_ ]", ""):gsub("%s+", "_")
-	config.gamefolder = "Sena/" .. foldername
+	config.gamefolder = "Nich/" .. foldername
 	config.autoloadfile = config.gamefolder .. "/autoload.txt"
 
 	if hasfs and not isfolder(config.gamefolder) then
@@ -3246,7 +3246,7 @@ function Chloex:Window(guiconfig)
 
 	local dropshadow = instance.imagelabel(dropshadowholder)
 	dropshadow.Name = "DropShadow"
-	dropshadow.Image = "rbxassetid://6015897843"
+	dropshadow.Image = "rbxassetid://122031425227672"
 	dropshadow.ImageColor3 = Color3.fromRGB(15, 15, 15)
 	dropshadow.ImageTransparency = 1
 	dropshadow.ScaleType = Enum.ScaleType.Slice
@@ -3853,7 +3853,7 @@ function Chloex:Window(guiconfig)
 		title.Position = UDim2.new(0, 0, 0, 4)
 		title.BackgroundTransparency = 1
 		title.Font = Enum.Font.GothamBold
-		title.Text = "Sena Window"
+		title.Text = "Nich Window"
 		title.TextSize = 22
 		title.TextColor3 = Color3.fromRGB(255, 255, 255)
 		title.ZIndex = 52
@@ -6924,7 +6924,7 @@ function Chloex:Window(guiconfig)
 				local fixedmax = tonumber(chatconfig.MaxLength)
 
 				-- Live chat is opt-in: off by default, choice remembered per device
-				local chatpreffile = "Sena/livechat_enabled.txt"
+				local chatpreffile = "Nich/livechat_enabled.txt"
 				local function loadchatpref()
 					local forced = getgenv and getgenv().SenaLiveChat
 					if forced ~= nil then
@@ -7474,7 +7474,7 @@ function Chloex:Window(guiconfig)
 					end
 
 					-- owner badge only from what the server decided (by uid); the
-					-- name is free text anyone can set to "Sena"
+					-- name is free text anyone can set to "Nich"
 					local ownermsg = (msg.owner == true)
 						or (msg.tier == "owner")
 						or (mine and localowner)
@@ -7485,7 +7485,7 @@ function Chloex:Window(guiconfig)
 					local cleanname = name:gsub("%s*%[DONATOR%]", ""):gsub("%s*%[TRIAL%]", ""):gsub("%s*%[VIP%]", ""):gsub("%s*%[OWNER%]", ""):gsub("%s*%[STAFF%]", "")
 					local hidden = (msg.hidden == true) or (name:find("%*") ~= nil)
 					if ownermsg then
-						cleanname = "Sena"
+						cleanname = "Nich"
 						hidden = false
 					elseif staffmsg then
 						hidden = false
@@ -7649,7 +7649,7 @@ function Chloex:Window(guiconfig)
 					local formattedbody = escapedbody:gsub("@([%w_]+)", function(taguser)
 						local isme = (taguser:lower() == myuname:lower())
 							or (taguser:lower() == mydname:lower())
-							or (localowner and taguser:lower() == "sena")
+							or (localowner and taguser:lower() == "nich")
 						if isme then
 							mentionedme = true
 							return '<font color="' .. goldhex .. '"><b>@' .. taguser .. "</b></font>"
@@ -7838,10 +7838,10 @@ function Chloex:Window(guiconfig)
 					local dn = localdisplayname():lower()
 					for tag in tostring(text or ""):gmatch("@([%w_]+)") do
 						local t = tag:lower()
-						if t == me or (dn ~= "" and t == dn) or (localowner and t == "sena") then
+						if t == me or (dn ~= "" and t == dn) or (localowner and t == "nich") then
 							pcall(function()
 								Chloex:Notify({
-									Title = "Sena",
+									Title = "Nich",
 									Description = "Live Chat",
 									Content = tostring(msg.name or "Someone") .. " mentioned you in chat",
 									Duration = 4,
@@ -8653,7 +8653,7 @@ function Chloex:Window(guiconfig)
 					if type(openurl) == "function" then
 						pcall(openurl, url)
 					end
-					Chloex:Notify({ Title = "Sena", Description = "Link Copied", Content = url, Duration = 4, Color = theme.Good })
+					Chloex:Notify({ Title = "Nich", Description = "Link Copied", Content = url, Duration = 4, Color = theme.Good })
 					btn.Text = successtext
 					task.delay(2.5, function()
 						if btn and btn.Parent then
@@ -8742,9 +8742,9 @@ function Chloex:Window(guiconfig)
 					local cb = clipboardread()
 					if cb and cb:gsub("%s+", "") ~= "" then
 						keyinput.Text = cb:gsub("%s+", "")
-						Chloex:Notify({ Title = "Sena", Description = "Key Pasted", Content = "Pasted license key from clipboard.", Duration = 2 })
+						Chloex:Notify({ Title = "Nich", Description = "Key Pasted", Content = "Pasted license key from clipboard.", Duration = 2 })
 					else
-						Chloex:Notify({ Title = "Sena", Description = "Clipboard", Content = "No text found in clipboard.", Duration = 2, Color = theme.Bad })
+						Chloex:Notify({ Title = "Nich", Description = "Clipboard", Content = "No text found in clipboard.", Duration = 2, Color = theme.Bad })
 					end
 				end)
 
@@ -8795,7 +8795,7 @@ function Chloex:Window(guiconfig)
 							statuslabel.TextColor3 = theme.Good
 
 							Chloex:Notify({
-								Title = "Sena",
+								Title = "Nich",
 								Description = "Donator VIP",
 								Content = string.format("License verified! %d days of Donator access active.", days),
 								Duration = 6,
@@ -8823,7 +8823,7 @@ function Chloex:Window(guiconfig)
 							statuslabel.Text = "Failed: " .. reason
 							statuslabel.TextColor3 = theme.Bad
 
-							Chloex:Notify({ Title = "Sena", Description = "Activation Failed", Content = reason, Duration = 5, Color = theme.Bad })
+							Chloex:Notify({ Title = "Nich", Description = "Activation Failed", Content = reason, Duration = 5, Color = theme.Bad })
 
 							task.delay(2.5, function()
 								if redeembtn and redeembtn.Parent then
